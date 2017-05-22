@@ -39,11 +39,19 @@
             var rigth2;
             var up2;
             var down2;
+            var enter;
+            var p;
             
             var score1 = 0;
             var scoreText1;
             var score2 = 0;
             var scoreText2;
+            var time = 60;
+            var timeText;
+
+            var gravity = 1000;
+
+            var dataPause = [];
 
             function create() {
                 game.add.sprite(0, 0, 'background');
@@ -69,18 +77,20 @@
                 player1 = game.add.sprite(32, game.world.height - 128, 'player1');
                 game.physics.arcade.enable(player1);
                 player1.body.bounce.y = 0;
-                player1.body.gravity.y = 1000;
+                player1.body.gravity.y = 0;
                 player1.body.collideWorldBounds = true;
                 player1.animations.add('left', [0, 1, 2, 3], 10, true);
                 player1.animations.add('right', [5, 6, 7, 8], 10, true);
+                player1.frame = 4;
 
                 player2 = game.add.sprite(game.world.width - 64, game.world.height - 128, 'player2');
                 game.physics.arcade.enable(player2);
                 player2.body.bounce.y = 0;
-                player2.body.gravity.y = 1000;
+                player2.body.gravity.y = 0;
                 player2.body.collideWorldBounds = true;
                 player2.animations.add('left', [0, 1, 2, 3], 10, true);
                 player2.animations.add('right', [5, 6, 7, 8], 10, true);
+                player2.frame = 4;
 
 
                 up1 = game.input.keyboard.addKey(Phaser.Keyboard.W);
@@ -92,73 +102,94 @@
                 left2 = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
                 right2 = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
 
+                enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+                p = game.input.keyboard.addKey(Phaser.Keyboard.P);
 
-
-                scoreText1 = game.add.text(16, 16, 'Puntos: 0', { fontSize: '32px', fill: '#000' });
-                scoreText2 = game.add.text(game.world.width - 160, 16, 'Puntos: 0', { fontSize: '32px', fill: '#000' });
+                scoreText1 = game.add.text(16, 16, 'Puntos: 0', { fontSize: '20px', fill: '#000' });
+                scoreText2 = game.add.text(game.world.width - 160, 16, 'Puntos: 0', { fontSize: '20px', fill: '#000' });
+                timeText = game.add.text(game.world.width - 480, 12, 'Tiempo: '+time, { fontSize: '32px', fill: '#000' });
             };
 
             var limitLaunch = 100;
             var launchCollectable = limitLaunch;
+            var fps = 0;
+            var playing = false;
 
             function update() {
 
-                game.physics.arcade.collide(collectables, platforms);
-                game.physics.arcade.collide(player1, platforms);
-                game.physics.arcade.collide(player2, platforms);
-
-                if (launchCollectable == 0) {
-                    var star = collectables.create(game.rnd.integerInRange(0, 800), 0, 'collectable');
+                if (playing){
                     
-                    star.body.gravity.y = 1000;
-                    star.body.velocity.x = game.rnd.integerInRange(-500, 500);
-                    star.body.collideWorldBounds = true;
-                    
-                    star.body.bounce.y = 0.7 + Math.random() * 0.2;
-                    star.body.bounce.x = 1;
+                    game.physics.arcade.collide(collectables, platforms);
+                    game.physics.arcade.collide(player1, platforms);
+                    game.physics.arcade.collide(player2, platforms);
 
-                    launchCollectable = limitLaunch;
+                    if (launchCollectable == 0) {
+                        var star = collectables.create(game.rnd.integerInRange(0, 800), 0, 'collectable');
+
+                        star.body.gravity.y = gravity;
+                        star.body.velocity.x = game.rnd.integerInRange(-500, 500);
+                        star.body.collideWorldBounds = true;
+
+                        star.body.bounce.y = 0.7 + Math.random() * 0.2;
+                        star.body.bounce.x = 1;
+
+                        launchCollectable = limitLaunch;
+                    } else {
+                        launchCollectable--;
+                    }
+
+                    player1.body.velocity.x = 0;
+                    player2.body.velocity.x = 0;
+
+                    if (left1.isDown) {
+                        player1.body.velocity.x = -150;
+                        player1.animations.play('left');
+                    }
+                    else if (right1.isDown) {
+                        player1.body.velocity.x = 150;
+                        player1.animations.play('right');
+                    }
+                    else {
+                        player1.animations.stop();
+                        player1.frame = 4;
+                    }
+                    if (up1.isDown && player1.body.touching.down) {
+                        player1.body.velocity.y = -450;
+                    }
+
+                    if (left2.isDown) {
+                        player2.body.velocity.x = -150;
+                        player2.animations.play('left');
+                    }
+                    else if (right2.isDown) {
+                        player2.body.velocity.x = 150;
+                        player2.animations.play('right');
+                    }
+                    else {
+                        player2.animations.stop();
+                        player2.frame = 4;
+                    }
+                    if (up2.isDown && player2.body.touching.down) {
+                        player2.body.velocity.y = -450;
+                    }
+
+                    game.physics.arcade.overlap(player1, collectables, collect1, null, this);
+                    game.physics.arcade.overlap(player2, collectables, collect2, null, this);
+
+                    if (fps % 60 == 0) {
+                        time--;
+                        timeText.text = 'Tiempo: ' + time;
+                    }
+                    fps++;
+
+                    if (p.isDown) {
+                        pause();
+                    }
                 } else {
-                    launchCollectable--;
+                    if (enter.isDown || p.isDown) {
+                        unpause();
+                    }
                 }
-
-                player1.body.velocity.x = 0;
-                player2.body.velocity.x = 0;
-
-                if (left1.isDown) {
-                    player1.body.velocity.x = -150;
-                    player1.animations.play('left');
-                }
-                else if (right1.isDown) {
-                    player1.body.velocity.x = 150;
-                    player1.animations.play('right');
-                }
-                else {
-                    player1.animations.stop();
-                    player1.frame = 4;
-                }
-                if (up1.isDown && player1.body.touching.down) {
-                    player1.body.velocity.y = -450;
-                }
-
-                if (left2.isDown) {
-                    player2.body.velocity.x = -150;
-                    player2.animations.play('left');
-                }
-                else if (right2.isDown) {
-                    player2.body.velocity.x = 150;
-                    player2.animations.play('right');
-                }
-                else {
-                    player2.animations.stop();
-                    player2.frame = 4;
-                }
-                if (up2.isDown && player2.body.touching.down) {
-                    player2.body.velocity.y = -450;
-                }
-
-                game.physics.arcade.overlap(player1, collectables, collect1, null, this);
-                game.physics.arcade.overlap(player2, collectables, collect2, null, this);
             };
 
 
@@ -171,6 +202,40 @@
                 star.kill();
                 score2 += 10;
                 scoreText2.text = 'Puntos: ' + score2;
+            }
+            function pause() {
+                playing = false;
+                dataPause.push(player1.body.velocity.x);
+                dataPause.push(player1.body.velocity.y);
+                dataPause.push(player2.body.velocity.x);
+                dataPause.push(player2.body.velocity.x);
+                player1.body.gravity.y = 0;
+                player1.body.velocity.x = 0;
+                player1.body.velocity.y = 0;
+                player2.body.gravity.y = 0;
+                player2.body.velocity.x = 0;
+                player2.body.velocity.y = 0;
+                for (var i = 0; i < collectables.children.length; i++) {
+                    dataPause.push(collectables.children[i].body.velocity.x);
+                    dataPause.push(collectables.children[i].body.velocity.x);
+                    collectables.children[i].body.gravity.y = 0;
+                    collectables.children[i].body.velocity.x = 0;
+                    collectables.children[i].body.velocity.y = 0;
+                }
+            }
+            function unpause() {
+                playing = true;
+                player1.body.gravity.y = gravity;
+                player1.body.velocity.x = dataPause.shift();
+                player1.body.velocity.y = dataPause.shift();
+                player2.body.gravity.y = gravity;
+                player2.body.velocity.x = dataPause.shift();
+                player2.body.velocity.y = dataPause.shift();
+                for (var i = 0; i < collectables.children.length; i++) {
+                    collectables.children[i].body.gravity.y = gravity;
+                    collectables.children[i].body.velocity.x = dataPause.shift();
+                    collectables.children[i].body.velocity.y = dataPause.shift();
+                }
             }
 
         /*function preload() {
