@@ -30,6 +30,9 @@ function changeTime() {
     }
 }
 function move(player, left, right, up, indexPlayer) {
+    if (player.body.touching.down) {
+        player.body.velocity.x = 0;
+    }
     if (left.isDown) {
         player.body.velocity.x = -150;
         player.animations.play('left');
@@ -55,9 +58,6 @@ function move(player, left, right, up, indexPlayer) {
     }
     if (up.isDown && player.body.touching.down) {
         player.body.velocity.y = -450;
-    }
-    if (player.body.touching.down) {
-        player.body.velocity.x = 0;
     }
 }
 function shoot1() {
@@ -99,6 +99,9 @@ function hitTo1(player, shoot) {
             lifeBar1.lineStyle(5, YELLOW, 1);
         }
     }
+    if (lifeBar1.scale.x <= 0) {
+        finishGame();
+    }
 }
 function hitTo2(player, shoot) {
     shoot.kill();
@@ -109,5 +112,8 @@ function hitTo2(player, shoot) {
         if (lifeBar2.scale.x < 0.4) {
             lifeBar2.lineStyle(5, YELLOW, 1);
         }
+    }
+    if (lifeBar2.scale.x <= 0) {
+        finishGame();
     }
 }

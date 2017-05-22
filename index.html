@@ -140,8 +140,8 @@
 
                         game.physics.arcade.overlap(player1, collectables, collect1, null, this);
                         game.physics.arcade.overlap(player2, collectables, collect2, null, this);
-                        game.physics.arcade.overlap(player1, shots2, hitTo1, null, this);
-                        game.physics.arcade.overlap(player2, shots1, hitTo2, null, this);
+                        game.physics.arcade.overlap(player1, shots2, hitTo1, hitTo1, this);
+                        game.physics.arcade.overlap(player2, shots1, hitTo2, hitTo2, this);
 
                         changeTime();
                         fps++;
