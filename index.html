@@ -22,12 +22,24 @@
                 game.load.image('ground', 'assets/platform.png');
                 game.load.image('cloud', 'assets/cloud-platform.png');
                 game.load.image('collectable', 'assets/collectable.png');
-                game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+                game.load.spritesheet('player1', 'assets/player1.png', 32, 48);
+                game.load.spritesheet('player2', 'assets/player2.png', 32, 48);
             };
 
             var platforms;
             var collectables;
-            var player;
+            var player1;
+            var player2;
+
+
+            var left1;
+            var rigth1;
+            var up1;
+            var down1;
+            var left2;
+            var rigth2;
+            var up2;
+            var down2;
 
             function create() {
                 game.add.sprite(0, 0, 'background');
@@ -40,25 +52,41 @@
                 ground.scale.setTo(2, 1);
                 ground.body.immovable = true;
 
-                for (var i = 0; i < 5; i++){
+                for (var i = 0; i < 7; i++){
                     var cloud = platforms.create(game.rnd.integerInRange(0, 600), game.rnd.integerInRange(100, 500), 'cloud');
                     cloud.body.immovable = true;
-                    cloud.scale.setTo(0.5, 0.5);
+                    cloud.scale.setTo(0.4, 0.4);
                 }
 
                 collectables = game.add.group();
                 collectables.enableBody = true;
 
 
-                player = game.add.sprite(32, game.world.height - 150, 'dude');
+                player1 = game.add.sprite(32, game.world.height - 128, 'player1');
+                game.physics.arcade.enable(player1);
+                player1.body.bounce.y = 0;
+                player1.body.gravity.y = 1000;
+                player1.body.collideWorldBounds = true;
+                player1.animations.add('left', [0, 1, 2, 3], 10, true);
+                player1.animations.add('right', [5, 6, 7, 8], 10, true);
 
-                game.physics.arcade.enable(player);
-                player.body.bounce.y = 0;
-                player.body.gravity.y = 1000;
-                player.body.collideWorldBounds = true;
-                
-                player.animations.add('left', [0, 1, 2, 3], 10, true);
-                player.animations.add('right', [5, 6, 7, 8], 10, true);
+                player2 = game.add.sprite(game.world.width - 64, game.world.height - 128, 'player2');
+                game.physics.arcade.enable(player2);
+                player2.body.bounce.y = 0;
+                player2.body.gravity.y = 1000;
+                player2.body.collideWorldBounds = true;
+                player2.animations.add('left', [0, 1, 2, 3], 10, true);
+                player2.animations.add('right', [5, 6, 7, 8], 10, true);
+
+
+                up1 = game.input.keyboard.addKey(Phaser.Keyboard.W);
+                down1 = game.input.keyboard.addKey(Phaser.Keyboard.S);
+                left1 = game.input.keyboard.addKey(Phaser.Keyboard.A);
+                right1 = game.input.keyboard.addKey(Phaser.Keyboard.D);
+                up2 = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+                down2 = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+                left2 = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+                right2 = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
                 
             };
 
@@ -68,7 +96,8 @@
             function update() {
 
                 game.physics.arcade.collide(collectables, platforms);
-                game.physics.arcade.collide(player, platforms);
+                game.physics.arcade.collide(player1, platforms);
+                game.physics.arcade.collide(player2, platforms);
 
                 if (launchCollectable == 0) {
                     var star = collectables.create(game.rnd.integerInRange(0, 800), 0, 'collectable');
@@ -84,7 +113,59 @@
                 } else {
                     launchCollectable--;
                 }
+
+                player1.body.velocity.x = 0;
+                player2.body.velocity.x = 0;
+
+                if (left1.isDown) {
+                    player1.body.velocity.x = -150;
+                    player1.animations.play('left');
+                }
+                else if (right1.isDown) {
+                    player1.body.velocity.x = 150;
+                    player1.animations.play('right');
+                }
+                else {
+                    player1.animations.stop();
+                    player1.frame = 4;
+                }
+                if (up1.isDown && player1.body.touching.down) {
+                    player1.body.velocity.y = -450;
+                }
+
+                if (left2.isDown) {
+                    player2.body.velocity.x = -150;
+                    player2.animations.play('left');
+                }
+                else if (right2.isDown) {
+                    player2.body.velocity.x = 150;
+                    player2.animations.play('right');
+                }
+                else {
+                    player2.animations.stop();
+                    player2.frame = 4;
+                }
+                if (up2.isDown && player2.body.touching.down) {
+                    player2.body.velocity.y = -450;
+                }
+
+                game.physics.arcade.overlap(player1, collectables, collect1, null, this);
+                game.physics.arcade.overlap(player2, collectables, collect2, null, this);
             };
+
+
+            function collect1(player, star) {
+                star.kill();
+
+                /*score += 10;
+                scoreText.text = 'Score: ' + score;*/
+            }
+            function collect2(player, star) {
+                star.kill();
+
+                /*score += 10;
+                scoreText.text = 'Score: ' + score;*/
+            }
 
         /*function preload() {
 
