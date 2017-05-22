@@ -23,12 +23,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\baddie.png" />
+    <Content Include="assets\cloud-platform.png" />
     <Content Include="assets\diamond.png" />
     <Content Include="assets\dude.png" />
     <Content Include="assets\firstaid.png" />
     <Content Include="assets\platform.png" />
-    <Content Include="assets\sky.png" />
-    <Content Include="assets\star.png" />
+    <Content Include="assets\background.png" />
+    <Content Include="assets\collectable.png" />
     <Content Include="index.html" />
     <Content Include="js\phaser.min.js" />
     <Content Include="web.config" />
