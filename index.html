@@ -15,6 +15,14 @@
 
         <script type="text/javascript">
 
+            //Constants
+            var GRAVITY = 1000;
+            var INIT = 0;
+            var PLAYING = 1;
+            var PAUSED = 2;
+            var FINISHED = 3;
+            var LIMIT_LAUNCH = 100;
+
             var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
             function preload() {
@@ -50,9 +58,10 @@
             var time = 60;
             var timeText;
 
-            var gravity = 1000;
-
             var dataPause = [];
+            var state = INIT;
+            var launchCollectable = LIMIT_LAUNCH;
+            var fps = 0;
 
             function create() {
                 game.add.sprite(0, 0, 'background');
@@ -110,101 +119,100 @@
                 timeText = game.add.text(game.world.width - 480, 12, 'Tiempo: '+time, { fontSize: '32px', fill: '#000' });
             };
 
-            var limitLaunch = 100;
-            var launchCollectable = limitLaunch;
-            var fps = 0;
-            var gameInitializated = false;
-            var playing = false;
-
             function update() {
 
-                if (playing){
-
-                    game.physics.arcade.collide(collectables, platforms);
-                    game.physics.arcade.collide(player1, platforms);
-                    game.physics.arcade.collide(player2, platforms);
-
-                    if (launchCollectable == 0) {
-                        var star = collectables.create(game.rnd.integerInRange(0, 800), 0, 'collectable');
-
-                        star.body.gravity.y = gravity;
-                        star.body.velocity.x = game.rnd.integerInRange(-500, 500);
-                        star.body.collideWorldBounds = true;
-
-                        star.body.bounce.y = 0.7 + Math.random() * 0.2;
-                        star.body.bounce.x = 1;
-
-                        launchCollectable = limitLaunch;
-                    } else {
-                        launchCollectable--;
-                    }
-
-                    player1.body.velocity.x = 0;
-                    player2.body.velocity.x = 0;
-
-                    if (left1.isDown) {
-                        player1.body.velocity.x = -150;
-                        player1.animations.play('left');
-                    }
-                    else if (right1.isDown) {
-                        player1.body.velocity.x = 150;
-                        player1.animations.play('right');
-                    }
-                    else {
-                        player1.animations.stop();
-                        player1.frame = 4;
-                    }
-                    if (up1.isDown && player1.body.touching.down) {
-                        player1.body.velocity.y = -450;
-                    }
-
-                    if (left2.isDown) {
-                        player2.body.velocity.x = -150;
-                        player2.animations.play('left');
-                    }
-                    else if (right2.isDown) {
-                        player2.body.velocity.x = 150;
-                        player2.animations.play('right');
-                    }
-                    else {
-                        player2.animations.stop();
-                        player2.frame = 4;
-                    }
-                    if (up2.isDown && player2.body.touching.down) {
-                        player2.body.velocity.y = -450;
-                    }
-
-                    game.physics.arcade.overlap(player1, collectables, collect1, null, this);
-                    game.physics.arcade.overlap(player2, collectables, collect2, null, this);
-
-                    if (fps % 60 == 0) {
-                        time--;
-                        timeText.text = 'Tiempo: ' + time;
-                        if (time == 0) {
-                            finishGame();
-                        }
-                    }
-                    fps++;
-
-                    if (p.isDown) {
-                        pause();
-                    }
-                } else {
-                    if (u.isDown && time > 0) {
-                        unpause();
-                    } else {
-                        if (enter.isDown && !gameInitializated) {
+                switch (state) {
+                    case INIT:
+                        if (enter.isDown) {
                             initGame();
                         }
-                    }
+                        break;
+                    case PLAYING:
+                        game.physics.arcade.collide(collectables, platforms);
+                        game.physics.arcade.collide(player1, platforms);
+                        game.physics.arcade.collide(player2, platforms);
+
+                        if (launchCollectable == 0) {
+                            var star = collectables.create(game.rnd.integerInRange(0, 800), 0, 'collectable');
+
+                            star.body.gravity.y = GRAVITY;
+                            star.body.velocity.x = game.rnd.integerInRange(-500, 500);
+                            star.body.collideWorldBounds = true;
+
+                            star.body.bounce.y = 0.7 + Math.random() * 0.2;
+                            star.body.bounce.x = 1;
+
+                            launchCollectable = LIMIT_LAUNCH;
+                        } else {
+                            launchCollectable--;
+                        }
+
+                        player1.body.velocity.x = 0;
+                        player2.body.velocity.x = 0;
+
+                        if (left1.isDown) {
+                            player1.body.velocity.x = -150;
+                            player1.animations.play('left');
+                        }
+                        else if (right1.isDown) {
+                            player1.body.velocity.x = 150;
+                            player1.animations.play('right');
+                        }
+                        else {
+                            player1.animations.stop();
+                            player1.frame = 4;
+                        }
+                        if (up1.isDown && player1.body.touching.down) {
+                            player1.body.velocity.y = -450;
+                        }
+
+                        if (left2.isDown) {
+                            player2.body.velocity.x = -150;
+                            player2.animations.play('left');
+                        }
+                        else if (right2.isDown) {
+                            player2.body.velocity.x = 150;
+                            player2.animations.play('right');
+                        }
+                        else {
+                            player2.animations.stop();
+                            player2.frame = 4;
+                        }
+                        if (up2.isDown && player2.body.touching.down) {
+                            player2.body.velocity.y = -450;
+                        }
+
+                        game.physics.arcade.overlap(player1, collectables, collect1, null, this);
+                        game.physics.arcade.overlap(player2, collectables, collect2, null, this);
+
+                        if (fps % 60 == 0) {
+                            time--;
+                            timeText.text = 'Tiempo: ' + time;
+                            if (time == 0) {
+                                finishGame();
+                            }
+                        }
+                        fps++;
+
+                        if (p.isDown) {
+                            pause();
+                        }
+                        break;
+                    case PAUSED:
+                        if (u.isDown && time > 0) {
+                            unpause();
+                        }
+                        break;
+                    case FINISHED:
+                        break;
+
                 }
             };
 
             function initGame() {
-                gameInitializated = true;
-                playing = true;
-                player1.body.gravity.y = gravity;
-                player2.body.gravity.y = gravity;
+                state = PLAYING;
+                player1.body.gravity.y = GRAVITY;
+                player2.body.gravity.y = GRAVITY;
             }
 
             function collect1(player, collectable) {
@@ -218,7 +226,7 @@
                 scoreText2.text = 'Golpes: ' + score2;
             }
             function pause() {
-                playing = false;
+                state = PAUSED;
                 dataPause.push(player1.body.velocity.x);
                 dataPause.push(player1.body.velocity.y);
                 dataPause.push(player2.body.velocity.x);
@@ -238,21 +246,21 @@
                 }
             }
             function unpause() {
-                playing = true;
-                player1.body.gravity.y = gravity;
+                state = PLAYING;
+                player1.body.gravity.y = GRAVITY;
                 player1.body.velocity.x = dataPause.shift();
                 player1.body.velocity.y = dataPause.shift();
-                player2.body.gravity.y = gravity;
+                player2.body.gravity.y = GRAVITY;
                 player2.body.velocity.x = dataPause.shift();
                 player2.body.velocity.y = dataPause.shift();
                 for (var i = 0; i < collectables.children.length; i++) {
-                    collectables.children[i].body.gravity.y = gravity;
+                    collectables.children[i].body.gravity.y = GRAVITY;
                     collectables.children[i].body.velocity.x = dataPause.shift();
                     collectables.children[i].body.velocity.y = dataPause.shift();
                 }
             }
             function finishGame() {
-                playing = false;
+                state = FINISHED;
                 player1.body.gravity.y = 0;
                 player1.body.velocity.x = 0;
                 player1.body.velocity.y = 0;
@@ -339,7 +347,7 @@
                 //  Create a star inside of the 'stars' group
                 var star = stars.create(i * 70, 0, 'star');
 
-                //  Let gravity do its thing
+                //  Let GRAVITY do its thing
                 star.body.gravity.y = 1000;
 
                 //  This just gives each star a slightly random bounce value
