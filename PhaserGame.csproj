@@ -22,16 +22,18 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="assets\baddie.png" />
+    <Content Include="assets\characters\player1.png" />
+    <Content Include="assets\characters\player2.png" />
     <Content Include="assets\cloud-platform.png" />
-    <Content Include="assets\diamond.png" />
-    <Content Include="assets\player2.png" />
-    <Content Include="assets\player1.png" />
+    <Content Include="assets\shoot2.png" />
+    <Content Include="assets\shoot1.png" />
     <Content Include="assets\firstaid.png" />
     <Content Include="assets\platform.png" />
     <Content Include="assets\background.png" />
     <Content Include="assets\collectable.png" />
     <Content Include="index.html" />
+    <Content Include="js\actions.js" />
+    <Content Include="js\initElements.js" />
     <Content Include="js\phaser.min.js" />
     <Content Include="web.config" />
   </ItemGroup>

@@ -4,7 +4,9 @@
 	    <meta charset="UTF-8" />
         <meta name="author" content="Erick Steven Velasco">
         <title>Gráfica interactiva</title>
-	    <script type="text/javascript" src="js/phaser.min.js"></script>
+        <script type="text/javascript" src="js/phaser.min.js"></script>
+        <script type="text/javascript" src="js/actions.js"></script>
+        <script type="text/javascript" src="js/initElements.js"></script>
         <style type="text/css">
             body {
                 margin: 0;
@@ -22,6 +24,54 @@
             var PAUSED = 2;
             var FINISHED = 3;
             var LIMIT_LAUNCH = 100;
+            var GREEN = 0x00FF00;
+            var YELLOW = 0xFFFF00;
+            var RED = 0xFF0000;
+            var WITHOUT_DIRECTION = 0;
+            var LEFT_DIRECTION = 1;
+            var RIGHT_DIRECTION = 2;
+            var SHOOT_VELOCITY = 800;
+
+            //Elements
+            var platforms;
+            var collectables;
+            var shots1;
+            var shots2;
+            var player1;
+            var player2;
+            var lifeBar1;
+            var lifeBar2;
+
+            //Keys
+            var left1;
+            var right1;
+            var up1;
+            var down1;
+            var left2;
+            var right2;
+            var up2;
+            var down2;
+            var enter;
+            var p;
+            var u;
+            var g;
+            var k;
+
+            //Text
+            var score1 = 0;
+            var scoreText1;
+            var score2 = 0;
+            var scoreText2;
+            var time = 60;
+            var timeText;
+
+            //For States
+            var dataPause = [];
+            var state = INIT;
+            var fps = 0;
+            var directions = [WITHOUT_DIRECTION, WITHOUT_DIRECTION];
+            var isShooting1 = false;
+            var isShooting2 = false;
 
             var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
@@ -30,94 +80,43 @@
                 game.load.image('ground', 'assets/platform.png');
                 game.load.image('cloud', 'assets/cloud-platform.png');
                 game.load.image('collectable', 'assets/collectable.png');
+                game.load.image('shoot1', 'assets/shoot1.png');
+                game.load.image('shoot2', 'assets/shoot2.png');
                 game.load.spritesheet('player1', 'assets/characters/player1.png', 32, 48);
                 game.load.spritesheet('player2', 'assets/characters/player2.png', 32, 48);
             };
 
-            var platforms;
-            var collectables;
-            var player1;
-            var player2;
-
-            var left1;
-            var rigth1;
-            var up1;
-            var down1;
-            var left2;
-            var rigth2;
-            var up2;
-            var down2;
-            var enter;
-            var p;
-            var u;
-            
-            var score1 = 0;
-            var scoreText1;
-            var score2 = 0;
-            var scoreText2;
-            var time = 60;
-            var timeText;
-
-            var dataPause = [];
-            var state = INIT;
-            var launchCollectable = LIMIT_LAUNCH;
-            var fps = 0;
-
             function create() {
                 game.add.sprite(0, 0, 'background');
-
                 game.physics.startSystem(Phaser.Physics.ARCADE);
-                
-                platforms = game.add.group();
-                platforms.enableBody = true;
-                var ground = platforms.create(0, game.world.height - 32, 'ground');
-                ground.scale.setTo(2, 1);
-                ground.body.immovable = true;
 
-                for (var i = 0; i < 7; i++){
-                    var cloud = platforms.create(game.rnd.integerInRange(-100, 700), game.rnd.integerInRange(100, 450), 'cloud');
-                    cloud.body.immovable = true;
-                    cloud.scale.setTo(0.4, 0.4);
-                }
+                lifeBar1 = game.add.graphics(16, 50);
+                lifeBar2 = game.add.graphics(game.world.width - 272, 50);
+                initLifeBar(lifeBar1);
+                initLifeBar(lifeBar2);
+
+                platforms = game.add.group();
+                initPlatforms(platforms);
 
                 collectables = game.add.group();
                 collectables.enableBody = true;
+                shots1 = game.add.group();
+                shots1.enableBody = true;
+                shots2 = game.add.group();
+                shots2.enableBody = true;
 
+                player1 = game.add.sprite(32, game.world.height - 112, 'player1');
+                player2 = game.add.sprite(game.world.width - 64, game.world.height - 112, 'player2');
+                initPlayer(player1);
+                initPlayer(player2);
 
-                player1 = game.add.sprite(32, game.world.height - 128, 'player1');
-                game.physics.arcade.enable(player1);
-                player1.body.gravity.y = 0;
-                player1.body.collideWorldBounds = true;
-                player1.animations.add('left', [0, 1, 2, 3], 10, true);
-                player1.animations.add('right', [5, 6, 7, 8], 10, true);
-                player1.frame = 4;
+                initKeys();
 
-                player2 = game.add.sprite(game.world.width - 64, game.world.height - 128, 'player2');
-                game.physics.arcade.enable(player2);
-                player2.body.gravity.y = 0;
-                player2.body.collideWorldBounds = true;
-                player2.animations.add('left', [0, 1, 2, 3], 10, true);
-                player2.animations.add('right', [5, 6, 7, 8], 10, true);
-                player2.frame = 4;
-
-
-                up1 = game.input.keyboard.addKey(Phaser.Keyboard.W);
-                down1 = game.input.keyboard.addKey(Phaser.Keyboard.S);
-                left1 = game.input.keyboard.addKey(Phaser.Keyboard.A);
-                right1 = game.input.keyboard.addKey(Phaser.Keyboard.D);
-                up2 = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-                down2 = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-                left2 = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-                right2 = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-
-                enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-                p = game.input.keyboard.addKey(Phaser.Keyboard.P);
-                u = game.input.keyboard.addKey(Phaser.Keyboard.U);
-
-                scoreText1 = game.add.text(16, 16, 'Golpes: 0', { fontSize: '20px', fill: '#000' });
-                scoreText2 = game.add.text(game.world.width - 160, 16, 'Puntos: 0', { fontSize: '20px', fill: '#000' });
-                timeText = game.add.text(game.world.width - 480, 12, 'Tiempo: '+time, { fontSize: '32px', fill: '#000' });
+                scoreText1 = game.add.text(16, 16, 'Tiros: 0', { fontSize: '20px', fill: '#000' });
+                scoreText2 = game.add.text(game.world.width - 150, 16, 'Tiros: 0', { fontSize: '20px', fill: '#000' });
+                timeText = game.add.text(game.world.width - 470, 12, 'Tiempo: '+time, { fontSize: '32px', fill: '#000' });
             };
+
 
             function update() {
 
@@ -131,71 +130,40 @@
                         game.physics.arcade.collide(collectables, platforms);
                         game.physics.arcade.collide(player1, platforms);
                         game.physics.arcade.collide(player2, platforms);
+                        game.physics.arcade.collide(player1, shots2);
+                        game.physics.arcade.collide(player2, shots1);
 
-                        if (launchCollectable == 0) {
-                            var star = collectables.create(game.rnd.integerInRange(0, 800), 0, 'collectable');
+                        launchCollectable();
 
-                            star.body.gravity.y = GRAVITY;
-                            star.body.velocity.x = game.rnd.integerInRange(-500, 500);
-                            star.body.collideWorldBounds = true;
-
-                            star.body.bounce.y = 0.7 + Math.random() * 0.2;
-                            star.body.bounce.x = 1;
-
-                            launchCollectable = LIMIT_LAUNCH;
-                        } else {
-                            launchCollectable--;
-                        }
-
-                        player1.body.velocity.x = 0;
-                        player2.body.velocity.x = 0;
-
-                        if (left1.isDown) {
-                            player1.body.velocity.x = -150;
-                            player1.animations.play('left');
-                        }
-                        else if (right1.isDown) {
-                            player1.body.velocity.x = 150;
-                            player1.animations.play('right');
-                        }
-                        else {
-                            player1.animations.stop();
-                            player1.frame = 4;
-                        }
-                        if (up1.isDown && player1.body.touching.down) {
-                            player1.body.velocity.y = -450;
-                        }
-
-                        if (left2.isDown) {
-                            player2.body.velocity.x = -150;
-                            player2.animations.play('left');
-                        }
-                        else if (right2.isDown) {
-                            player2.body.velocity.x = 150;
-                            player2.animations.play('right');
-                        }
-                        else {
-                            player2.animations.stop();
-                            player2.frame = 4;
-                        }
-                        if (up2.isDown && player2.body.touching.down) {
-                            player2.body.velocity.y = -450;
-                        }
+                        move(player1, left1, right1, up1, 0);
+                        move(player2, left2, right2, up2, 1);
 
                         game.physics.arcade.overlap(player1, collectables, collect1, null, this);
                         game.physics.arcade.overlap(player2, collectables, collect2, null, this);
+                        game.physics.arcade.overlap(player1, shots2, hitTo1, null, this);
+                        game.physics.arcade.overlap(player2, shots1, hitTo2, null, this);
 
-                        if (fps % 60 == 0) {
-                            time--;
-                            timeText.text = 'Tiempo: ' + time;
-                            if (time == 0) {
-                                finishGame();
-                            }
-                        }
+                        changeTime();
                         fps++;
 
                         if (p.isDown) {
                             pause();
+                        }
+                        if (g.isDown && score1 > 0 && !isShooting1) {
+                            isShooting1 = true;
+                            shoot1();
+                        } else {
+                            if (!g.isDown) {
+                                isShooting1 = false;
+                            }
+                        }
+                        if (k.isDown && score1 > 0 && !isShooting2) {
+                            isShooting2 = true;
+                            shoot2();
+                        } else {
+                            if (!k.isDown) {
+                                isShooting2 = false;
+                            }
                         }
                         break;
                     case PAUSED:
@@ -213,17 +181,6 @@
                 state = PLAYING;
                 player1.body.gravity.y = GRAVITY;
                 player2.body.gravity.y = GRAVITY;
-            }
-
-            function collect1(player, collectable) {
-                collectable.kill();
-                score1 += 1;
-                scoreText1.text = 'Golpes: ' + score1;
-            }
-            function collect2(player, collectable) {
-                collectable.kill();
-                score2 += 1;
-                scoreText2.text = 'Golpes: ' + score2;
             }
             function pause() {
                 state = PAUSED;
@@ -273,148 +230,6 @@
                     collectables.children[i].body.velocity.y = 0;
                 }
             }
-
-        /*function preload() {
-
-            game.load.image('sky', 'assets/sky.png');
-            game.load.image('ground', 'assets/platform.png');
-            game.load.image('star', 'assets/star.png');
-            game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
-
-        }
-
-        var player;
-        var platforms;
-        var cursors;
-
-        var stars;
-        var score = 0;
-        var scoreText;
-
-        function create() {
-
-            //  We're going to be using physics, so enable the Arcade Physics system
-            game.physics.startSystem(Phaser.Physics.ARCADE);
-
-            //  A simple background for our game
-
-            //  The platforms group contains the ground and the 2 ledges we can jump on
-            platforms = game.add.group();
-
-            //  We will enable physics for any object that is created in this group
-            platforms.enableBody = true;
-
-            // Here we create the ground.
-            var ground = platforms.create(0, game.world.height - 64, 'ground');
-
-            //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-            ground.scale.setTo(2, 2);
-
-            //  This stops it from falling away when you jump on it
-            ground.body.immovable = true;
-
-            //  Now let's create two ledges
-            var ledge = platforms.create(400, 400, 'ground');
-            ledge.body.immovable = true;
-
-            ledge = platforms.create(-150, 250, 'ground');
-            ledge.body.immovable = true;
-
-            // The player and its settings
-            player = game.add.sprite(32, game.world.height - 150, 'dude');
-
-            //  We need to enable physics on the player
-            game.physics.arcade.enable(player);
-
-            //  Player physics properties. Give the little guy a slight bounce.
-            player.body.bounce.y = 0;
-            player.body.gravity.y = 1000;
-            player.body.collideWorldBounds = true;
-
-            //  Our two animations, walking left and right.
-            player.animations.add('left', [0, 1, 2, 3], 10, true);
-            player.animations.add('right', [5, 6, 7, 8], 10, true);
-
-            //  Finally some stars to collect
-            stars = game.add.group();
-
-            //  We will enable physics for any star that is created in this group
-            stars.enableBody = true;
-
-            //  Here we'll create 12 of them evenly spaced apart
-            for (var i = 0; i < 12; i++)
-            {
-                //  Create a star inside of the 'stars' group
-                var star = stars.create(i * 70, 0, 'star');
-
-                //  Let GRAVITY do its thing
-                star.body.gravity.y = 1000;
-
-                //  This just gives each star a slightly random bounce value
-                star.body.bounce.y = 0.7 + Math.random() * 0.2;
-            }
-
-            //  The score
-            scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-
-            //  Our controls.
-            cursors = game.input.keyboard.createCursorKeys();
-    
-        }
-
-        function update() {
-
-            //  Collide the player and the stars with the platforms
-            game.physics.arcade.collide(player, platforms);
-            game.physics.arcade.collide(stars, platforms);
-
-            //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-            game.physics.arcade.overlap(player, stars, collectStar, null, this);
-
-            //  Reset the players velocity (movement)
-            player.body.velocity.x = 0;
-
-            if (cursors.left.isDown)
-            {
-                //  Move to the left
-                player.body.velocity.x = -150;
-
-                player.animations.play('left');
-            }
-            else if (cursors.right.isDown)
-            {
-                //  Move to the right
-                player.body.velocity.x = 150;
-
-                player.animations.play('right');
-            }
-            else
-            {
-                //  Stand still
-                player.animations.stop();
-
-                player.frame = 4;
-            }
-    
-            //  Allow the player to jump if they are touching the ground.
-            if (cursors.up.isDown && player.body.touching.down)
-            {
-                player.body.velocity.y = -350;
-            }
-
-        }
-
-        function collectStar (player, star) {
-    
-            // Removes the star from the screen
-            star.kill();
-
-            //  Add and update the score
-            score += 10;
-            scoreText.text = 'Score: ' + score;
-
-        }*/
-
         </script>
 
     </body>
