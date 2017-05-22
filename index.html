@@ -31,7 +31,6 @@
             var player1;
             var player2;
 
-
             var left1;
             var rigth1;
             var up1;
@@ -40,6 +39,11 @@
             var rigth2;
             var up2;
             var down2;
+            
+            var score1 = 0;
+            var scoreText1;
+            var score2 = 0;
+            var scoreText2;
 
             function create() {
                 game.add.sprite(0, 0, 'background');
@@ -87,10 +91,14 @@
                 down2 = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
                 left2 = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
                 right2 = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-                
+
+
+
+                scoreText1 = game.add.text(16, 16, 'Puntos: 0', { fontSize: '32px', fill: '#000' });
+                scoreText2 = game.add.text(game.world.width - 160, 16, 'Puntos: 0', { fontSize: '32px', fill: '#000' });
             };
 
-            var limitLaunch = 50;
+            var limitLaunch = 100;
             var launchCollectable = limitLaunch;
 
             function update() {
@@ -156,15 +164,13 @@
 
             function collect1(player, star) {
                 star.kill();
-
-                /*score += 10;
-                scoreText.text = 'Score: ' + score;*/
+                score1 += 10;
+                scoreText1.text = 'Puntos: ' + score1;
             }
             function collect2(player, star) {
                 star.kill();
-
-                /*score += 10;
-                scoreText.text = 'Score: ' + score;*/
+                score2 += 10;
+                scoreText2.text = 'Puntos: ' + score2;
             }
 
         /*function preload() {
