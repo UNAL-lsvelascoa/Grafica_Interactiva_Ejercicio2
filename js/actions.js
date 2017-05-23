@@ -61,32 +61,40 @@ function move(player, left, right, up, indexPlayer) {
     }
 }
 function shoot1() {
-    var shooting = shots1.create(player1.body.x + 12, player1.body.y + 12, 'shoot1');
-    shooting.scale.setTo(0.4, 0.4);
     switch (directions[0]) {
         case LEFT_DIRECTION:
+            var shooting = shots1.create(player1.body.x + 12, player1.body.y + 12, 'shoot1');
+            shooting.scale.setTo(0.4, 0.4);
             shooting.body.velocity.x = -SHOOT_VELOCITY;
+            score1--;
+            scoreText1.text = 'Tiros: ' + score1;
             break;
         case RIGHT_DIRECTION:
+            var shooting = shots1.create(player1.body.x + 12, player1.body.y + 12, 'shoot1');
+            shooting.scale.setTo(0.4, 0.4);
             shooting.body.velocity.x = SHOOT_VELOCITY;
+            score1--;
+            scoreText1.text = 'Tiros: ' + score1;
             break;
     }
-    score1--;
-    scoreText1.text = 'Tiros: ' + score1;
 }
 function shoot2() {
-    var shooting = shots2.create(player2.body.x+12, player2.body.y+12, 'shoot2');
-    shooting.scale.setTo(0.4, 0.4);
     switch (directions[1]) {
         case LEFT_DIRECTION:
+            var shooting = shots2.create(player2.body.x + 12, player2.body.y + 12, 'shoot2');
+            shooting.scale.setTo(0.4, 0.4);
             shooting.body.velocity.x = -SHOOT_VELOCITY;
+            score2--;
+            scoreText2.text = 'Tiros: ' + score2;
             break;
         case RIGHT_DIRECTION:
+            var shooting = shots2.create(player2.body.x + 12, player2.body.y + 12, 'shoot2');
+            shooting.scale.setTo(0.4, 0.4);
             shooting.body.velocity.x = SHOOT_VELOCITY;
+            score2--;
+            scoreText2.text = 'Tiros: ' + score2;
             break;
     }
-    score2--;
-    scoreText2.text = 'Tiros: ' + score2;
 }
 
 function hitTo1(player, shoot) {
