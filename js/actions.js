@@ -9,7 +9,7 @@ function collect2(player, collectable) {
     scoreText2.text = 'Tiros: ' + score2;
 }
 function launchCollectable() {
-    if (game.rnd.integerInRange(1, 50) == 1) {
+    if (game.rnd.integerInRange(1, 10) == 1) {
         var star = collectables.create(game.rnd.integerInRange(0, 800), 0, 'collectable');
 
         star.body.gravity.y = GRAVITY;
@@ -93,13 +93,14 @@ function hitTo1(player, shoot) {
     shoot.kill();
     lifeBar1.scale.x -= game.rnd.realInRange(0.01, 0.05);
     if (lifeBar1.scale.x < 0.15) {
-        lifeBar1.lineStyle(5, RED, 1);
+        lifeBar1.tint = RED;
     } else {
         if (lifeBar1.scale.x < 0.4) {
-            lifeBar1.lineStyle(5, YELLOW, 1);
+            lifeBar1.tint = YELLOW;
         }
     }
     if (lifeBar1.scale.x <= 0) {
+        lifeBar1.scale.x = 0;
         finishGame();
     }
 }
@@ -107,13 +108,14 @@ function hitTo2(player, shoot) {
     shoot.kill();
     lifeBar2.scale.x -= game.rnd.realInRange(0.01, 0.05);
     if (lifeBar2.scale.x < 0.15) {
-        lifeBar2.lineStyle(5, RED, 1);
+        lifeBar2.tint = RED;
     } else {
         if (lifeBar2.scale.x < 0.4) {
-            lifeBar2.lineStyle(5, YELLOW, 1);
+            lifeBar2.tint = YELLOW;
         }
     }
     if (lifeBar2.scale.x <= 0) {
+        lifeBar2.scale.x = 0;
         finishGame();
     }
 }

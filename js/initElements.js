@@ -1,8 +1,10 @@
 ﻿function initLifeBar(lifeBar) {
-    lifeBar.lineStyle(5, GREEN, 1);
+    lifeBar.lineStyle(5, 0xffffff, 1);
+    lifeBar.tint = GREEN;
     lifeBar.moveTo(0, 0);
     lifeBar.lineTo(250, 0);
     lifeBar.scale.x = 1;
+    lifeBar.endFill();
 }
 
 function initPlayer(player) {
