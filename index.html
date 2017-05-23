@@ -82,8 +82,8 @@
                 game.load.image('collectable', 'assets/collectable.png');
                 game.load.image('shoot1', 'assets/shoot1.png');
                 game.load.image('shoot2', 'assets/shoot2.png');
-                game.load.spritesheet('player1', 'assets/characters/player1.png', 32, 48);
-                game.load.spritesheet('player2', 'assets/characters/player2.png', 32, 48);
+                game.load.spritesheet('pikachu', 'assets/characters/pikachu.png', 48, 48);
+                game.load.spritesheet('charmander', 'assets/characters/charmander.png', 48, 48);
             };
 
             function create() {
@@ -105,8 +105,8 @@
                 shots2 = game.add.group();
                 shots2.enableBody = true;
 
-                player1 = game.add.sprite(32, game.world.height - 112, 'player1');
-                player2 = game.add.sprite(game.world.width - 64, game.world.height - 112, 'player2');
+                player1 = game.add.sprite(32, game.world.height - 112, 'pikachu');
+                player2 = game.add.sprite(game.world.width - 64, game.world.height - 112, 'charmander');
                 initPlayer(player1);
                 initPlayer(player2);
 
@@ -127,20 +127,17 @@
                         }
                         break;
                     case PLAYING:
+                        launchCollectable();
+
                         game.physics.arcade.collide(collectables, platforms);
                         game.physics.arcade.collide(player1, platforms);
                         game.physics.arcade.collide(player2, platforms);
-                        game.physics.arcade.collide(player1, shots2, hitTo1);
-                        game.physics.arcade.collide(player2, shots1, hitTo2);
-
-                        launchCollectable();
-
-                        move(player1, left1, right1, up1, 0);
-                        move(player2, left2, right2, up2, 1);
-
                         game.physics.arcade.overlap(player1, collectables, collect1, null, this);
                         game.physics.arcade.overlap(player2, collectables, collect2, null, this);
-
+                        
+                        move(player1, left1, right1, up1, 0);
+                        move(player2, left2, right2, up2, 1);
+                        
                         changeTime();
                         fps++;
 
@@ -163,6 +160,10 @@
                                 isShooting2 = false;
                             }
                         }
+
+
+                        game.physics.arcade.collide(player1, shots2, hitTo1);
+                        game.physics.arcade.collide(player2, shots1, hitTo2);
                         break;
                     case PAUSED:
                         if (u.isDown && time > 0) {
@@ -170,6 +171,10 @@
                         }
                         break;
                     case FINISHED:
+                        game.physics.arcade.collide(collectables, platforms);
+                        game.physics.arcade.collide(player1, platforms);
+                        game.physics.arcade.collide(player2, platforms);
+
                         break;
 
                 }
@@ -236,12 +241,34 @@
             }
             function finishGame() {
                 state = FINISHED;
-                player1.body.gravity.y = 0;
-                player1.body.velocity.x = 0;
-                player1.body.velocity.y = 0;
-                player2.body.gravity.y = 0;
-                player2.body.velocity.x = 0;
-                player2.body.velocity.y = 0;
+
+                if (lifeBar1.scale.x == 0) {
+                    player1.animations.play('die');
+                } else {
+                    if (lifeBar2.scale.x == 0) {
+                        player2.animations.play('die');
+                    } else {
+                        if (lifeBar1.scale.x < lifeBar2.scale.x) {
+                            player1.animations.play('die');
+                        } else {
+                            if (lifeBar2.scale.x < lifeBar1.scale.x) {
+                                player2.animations.play('die');
+                            } else {
+                                if (score1 < score2) {
+                                    player1.animations.play('die');
+                                } else {
+                                    if (score2 < score1) {
+                                        player2.animations.play('die');
+                                    } else {
+                                        player1.animations.play('die');
+                                        player2.animations.play('die');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 for (var i = 0; i < collectables.children.length; i++) {
                     collectables.children[i].body.gravity.y = 0;
                     collectables.children[i].body.velocity.x = 0;

@@ -9,7 +9,7 @@ function collect2(player, collectable) {
     scoreText2.text = 'Tiros: ' + score2;
 }
 function launchCollectable() {
-    if (game.rnd.integerInRange(1, 10) == 1) {
+    if (game.rnd.integerInRange(1, 50) == 1) {
         var star = collectables.create(game.rnd.integerInRange(0, 800), 0, 'collectable');
 
         star.body.gravity.y = GRAVITY;
@@ -48,10 +48,10 @@ function move(player, left, right, up, indexPlayer) {
             player.animations.stop();
             switch (directions[indexPlayer]) {
                 case LEFT_DIRECTION:
-                    player.frame = 2;
+                    player.frame = 8;
                     break;
                 case RIGHT_DIRECTION:
-                    player.frame = 5;
+                    player.frame = 3;
                     break;
             }
         }

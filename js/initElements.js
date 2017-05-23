@@ -11,9 +11,11 @@ function initPlayer(player) {
     game.physics.arcade.enable(player);
     player.body.gravity.y = 0;
     player.body.collideWorldBounds = true;
-    player.animations.add('left', [0, 1, 2, 3], 10, true);
-    player.animations.add('right', [5, 6, 7, 8], 10, true);
-    player.frame = 4;
+    player.animations.add('right', [1, 2, 3, 4, 5], 10, true);
+    player.animations.add('left', [6, 7, 8, 9, 10], 10, true);
+    player.animations.add('front', [11, 12, 13, 14, 15], 10, true);
+    player.animations.add('die', [16, 17, 18, 19, 20], 5, false);
+    player.animations.play('front');
 }
 
 function initKeys() {
