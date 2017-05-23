@@ -9,7 +9,7 @@ function collect2(player, collectable) {
     scoreText2.text = 'Tiros: ' + score2;
 }
 function launchCollectable() {
-    if (game.rnd.integerInRange(1, 100) % 20 == 0) {
+    if (game.rnd.integerInRange(1, 100) % 50 == 0) {
         var star = collectables.create(game.rnd.integerInRange(0, 800), 0, 'collectable');
 
         star.body.gravity.y = GRAVITY;
