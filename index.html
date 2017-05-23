@@ -41,6 +41,7 @@
             var player2;
             var lifeBar1;
             var lifeBar2;
+            var background_pause;
 
             //Keys
             var left1;
@@ -77,8 +78,9 @@
 
             function preload() {
                 game.load.image('background', 'assets/background.png');
-                game.load.image('ground', 'assets/platform.png');
-                game.load.image('cloud', 'assets/cloud-platform.png');
+                game.load.image('background_pause', 'assets/background_pause.png');
+                game.load.image('ground', 'assets/platform_ground.png');
+                game.load.image('cloud', 'assets/platform_cloud.png');
                 game.load.image('collectable', 'assets/collectable.png');
                 game.load.image('shoot1', 'assets/shoot1.png');
                 game.load.image('shoot2', 'assets/shoot2.png');
@@ -186,6 +188,7 @@
                 player2.body.gravity.y = GRAVITY;
             }
             function pause() {
+                background_pause = game.add.sprite(0, 0, 'background_pause');
                 state = PAUSED;
                 dataPause.push(player1.body.velocity.x);
                 dataPause.push(player1.body.velocity.y);
@@ -218,6 +221,7 @@
                 }
             }
             function unpause() {
+                background_pause.kill();
                 state = PLAYING;
                 player1.body.gravity.y = GRAVITY;
                 player1.body.velocity.x = dataPause.shift();
@@ -240,6 +244,9 @@
                 }
             }
             function finishGame() {
+                { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" }
+                background_pause = game.add.sprite(0, 0, 'background_pause');
+
                 state = FINISHED;
 
                 if (lifeBar1.scale.x == 0) {

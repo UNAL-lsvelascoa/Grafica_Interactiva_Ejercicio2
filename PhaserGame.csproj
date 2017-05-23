@@ -24,13 +24,14 @@
   <ItemGroup>
     <Content Include="assets\characters\charmander.png" />
     <Content Include="assets\characters\pikachu.png" />
-    <Content Include="assets\cloud-platform.png" />
+    <Content Include="assets\platform_cloud.png" />
     <Content Include="assets\shoot2.png" />
     <Content Include="assets\shoot1.png" />
     <Content Include="assets\firstaid.png" />
-    <Content Include="assets\platform.png" />
+    <Content Include="assets\platform_ground.png" />
     <Content Include="assets\background.png" />
     <Content Include="assets\collectable.png" />
+    <Content Include="assets\background_pause.png" />
     <Content Include="index.html" />
     <Content Include="js\actions.js" />
     <Content Include="js\initElements.js" />
