@@ -35,6 +35,8 @@
     <Content Include="assets\sounds\battle.mp3" />
     <Content Include="assets\sounds\die.mp3" />
     <Content Include="assets\sounds\hit.mp3" />
+    <Content Include="assets\sounds\intro.mp3" />
+    <Content Include="assets\sounds\pause.mp3" />
     <Content Include="assets\sounds\shoot2.mp3" />
     <Content Include="assets\sounds\shoot1.mp3" />
     <Content Include="index.html" />

@@ -78,12 +78,12 @@
             var isShooting2 = false;
 
             //Sounds
+            var intro;
             var battle;
             var hit;
             var die;
             var shoot1;
             var shoot2;
-
 
             var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
@@ -98,13 +98,17 @@
                 game.load.spritesheet('pikachu', 'assets/characters/pikachu.png', 48, 48);
                 game.load.spritesheet('charmander', 'assets/characters/charmander.png', 48, 48);
                 game.load.audio('battle', 'assets/sounds/battle.mp3');
+                game.load.audio('intro', 'assets/sounds/intro.mp3');
                 game.load.audio('hit', 'assets/sounds/hit.mp3');
                 game.load.audio('die', 'assets/sounds/die.mp3');
                 game.load.audio('shoot1', 'assets/sounds/shoot1.mp3');
                 game.load.audio('shoot2', 'assets/sounds/shoot2.mp3');
+                game.load.audio('pause', 'assets/sounds/pause.mp3');
             };
 
             function create() {
+                intro = game.add.audio('intro');
+                intro.play('', 0, 1, true);
                 game.add.sprite(0, 0, 'background');
                 game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -228,10 +232,13 @@
                 var style = { font: "80px Arial", fill: RED, wordWrap: true, wordWrapWidth: game.world.width, wordWrapHeight: game.world.height, align: "center", backgroundColor: "#ffffff" };
                 readyText = game.add.text(game.world.centerX, game.world.centerY, 'Round 1', style);
                 readyText.anchor.set(0.5);
+                intro.pause();
                 battle = game.add.audio('battle');
                 battle.play('', 0, 1, true);
             }
             function pause() {
+                battle.pause();
+                game.add.audio('pause').play('', 0, 1, false);
                 background_pause = game.add.sprite(0, 0, 'background_pause');
                 state = PAUSED;
                 dataPause.push(player1.body.velocity.x);
@@ -265,6 +272,8 @@
                 }
             }
             function unpause() {
+                game.add.audio('pause').play('', 0, 1, false);
+                battle.resume();
                 background_pause.kill();
                 state = PLAYING;
                 player1.body.gravity.y = GRAVITY;
