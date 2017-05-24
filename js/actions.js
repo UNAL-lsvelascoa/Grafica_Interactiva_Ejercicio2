@@ -72,6 +72,7 @@ function shoot1() {
             shooting.body.velocity.x = -SHOOT_VELOCITY;
             score1--;
             scoreText1.text = 'Tiros: ' + score1;
+            game.add.audio('shoot1').play('', 0, 1, false);
             break;
         case RIGHT_DIRECTION:
             var shooting = shots1.create(player1.body.x + 12, player1.body.y + 12, 'shoot1');
@@ -79,6 +80,7 @@ function shoot1() {
             shooting.body.velocity.x = SHOOT_VELOCITY;
             score1--;
             scoreText1.text = 'Tiros: ' + score1;
+            game.add.audio('shoot1').play('', 0, 1, false);
             break;
     }
 }
@@ -90,6 +92,7 @@ function shoot2() {
             shooting.body.velocity.x = -SHOOT_VELOCITY;
             score2--;
             scoreText2.text = 'Tiros: ' + score2;
+            game.add.audio('shoot2').play('', 0, 1, false);
             break;
         case RIGHT_DIRECTION:
             var shooting = shots2.create(player2.body.x + 12, player2.body.y + 12, 'shoot2');
@@ -97,11 +100,13 @@ function shoot2() {
             shooting.body.velocity.x = SHOOT_VELOCITY;
             score2--;
             scoreText2.text = 'Tiros: ' + score2;
+            game.add.audio('shoot2').play('', 0, 1, false);
             break;
     }
 }
 
 function hitTo1(player, shoot) {
+    game.add.audio('hit').play('', 0, 1, false);
     shoot.kill();
     lifeBar1.scale.x -= game.rnd.realInRange(0.1, 0.15);
     if (lifeBar1.scale.x < 0.15) {
@@ -117,6 +122,7 @@ function hitTo1(player, shoot) {
     }
 }
 function hitTo2(player, shoot) {
+    game.add.audio('hit').play('', 0, 1, false);
     shoot.kill();
     lifeBar2.scale.x -= game.rnd.realInRange(0.05, 0.12);
     if (lifeBar2.scale.x < 0.15) {

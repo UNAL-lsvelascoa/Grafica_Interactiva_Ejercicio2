@@ -33,6 +33,10 @@
     <Content Include="assets\collectable.png" />
     <Content Include="assets\background_pause.png" />
     <Content Include="assets\sounds\battle.mp3" />
+    <Content Include="assets\sounds\die.mp3" />
+    <Content Include="assets\sounds\hit.mp3" />
+    <Content Include="assets\sounds\shoot2.mp3" />
+    <Content Include="assets\sounds\shoot1.mp3" />
     <Content Include="index.html" />
     <Content Include="js\actions.js" />
     <Content Include="js\initElements.js" />
