@@ -25,6 +25,7 @@
     <Content Include="assets\buttons\btnStart.png" />
     <Content Include="assets\characters\charmander.png" />
     <Content Include="assets\characters\pikachu.png" />
+    <Content Include="assets\star.png" />
     <Content Include="assets\logo.png" />
     <Content Include="assets\platform_cloud.png" />
     <Content Include="assets\shoot2.png" />
@@ -42,6 +43,7 @@
     <Content Include="assets\sounds\shoot2.mp3" />
     <Content Include="assets\sounds\shoot1.mp3" />
     <Content Include="index.html" />
+    <Content Include="js\states.js" />
     <Content Include="js\actions.js" />
     <Content Include="js\initElements.js" />
     <Content Include="js\phaser.min.js" />

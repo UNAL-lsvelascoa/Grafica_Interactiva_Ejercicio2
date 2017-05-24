@@ -39,5 +39,4 @@ function initPlatforms(platforms) {
     var ground = platforms.create(0, game.world.height - 32, 'ground');
     ground.scale.setTo(2, 1);
     ground.body.immovable = true;
-
 }

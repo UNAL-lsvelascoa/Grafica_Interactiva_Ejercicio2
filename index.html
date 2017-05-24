@@ -7,6 +7,7 @@
         <script type="text/javascript" src="js/phaser.min.js"></script>
         <script type="text/javascript" src="js/actions.js"></script>
         <script type="text/javascript" src="js/initElements.js"></script>
+        <script type="text/javascript" src="js/states.js"></script>
         <style type="text/css">
             body {
                 margin: 0;
@@ -19,11 +20,13 @@
 
             //Constants
             var GRAVITY = 1000;
+            var ROUND_TIME = 60;
             var INIT = 0;
             var PLAYING = 1;
             var PAUSED = 2;
             var FINISHED = 3;
             var READY = 4;
+            var FINISH_ROUND = 5;
             var LIMIT_LAUNCH = 100;
             var GREEN = 0x00FF00;
             var YELLOW = 0xFCD516;
@@ -66,9 +69,11 @@
             var scoreText1;
             var score2 = 0;
             var scoreText2;
-            var time = 60;
+            var time = ROUND_TIME;
             var timeText;
             var readyText;
+            var roundText;
+            var winText;
 
             //For States
             var dataPause = [];
@@ -85,6 +90,11 @@
             var die;
             var shoot1;
             var shoot2;
+
+            //Rounds logic
+            var round = 1;
+            var winPlayer1 = false;
+            var winPlayer2 = false;
 
             var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
@@ -119,8 +129,14 @@
                 platforms = game.add.group();
                 initPlatforms(platforms);
 
-                logo = game.add.sprite(game.world.centerX - 223, 100, 'logo');
+                collectables = game.add.group();
+                collectables.enableBody = true;
+                shots1 = game.add.group();
+                shots1.enableBody = true;
+                shots2 = game.add.group();
+                shots2.enableBody = true;
 
+                logo = game.add.sprite(game.world.centerX - 223, 100, 'logo');
                 btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', initGame, this, 2, 1, 0);
 
                 /*btnStart.onInputOver.add(over, this);
@@ -133,9 +149,10 @@
 
             function update() {
 
+                fps++;
+
                 switch (state) {
                     case INIT:
-                        fps++;
                         launchCloud();
                         if (enter.isDown) {
                             initGame();
@@ -143,8 +160,6 @@
                         break;
                     case READY:
                         launchCloud();
-                        logo.destroy();
-                        fps++;
                         game.physics.arcade.collide(collectables, platforms);
                         game.physics.arcade.collide(player1, platforms);
                         game.physics.arcade.collide(player2, platforms);
@@ -178,7 +193,6 @@
                         move(player2, left2, right2, up2, 1);
 
                         changeTime();
-                        fps++;
 
                         if (p.isDown) {
                             pause();
@@ -200,7 +214,6 @@
                             }
                         }
 
-
                         game.physics.arcade.collide(player1, shots2, hitTo1);
                         game.physics.arcade.collide(player2, shots1, hitTo2);
                         break;
@@ -209,11 +222,15 @@
                             unpause();
                         }
                         break;
+                    case FINISH_ROUND:
+                        game.physics.arcade.collide(collectables, platforms);
+                        game.physics.arcade.collide(player1, platforms);
+                        game.physics.arcade.collide(player2, platforms);
+                        break;
                     case FINISHED:
                         game.physics.arcade.collide(collectables, platforms);
                         game.physics.arcade.collide(player1, platforms);
                         game.physics.arcade.collide(player2, platforms);
-
                         break;
 
                 }
@@ -222,6 +239,8 @@
             function initGame() {
                 fps = 0;
                 btnStart.destroy();
+                intro.pause();
+                logo.destroy();
 
                 initLifeBar(game.add.graphics(16, 50), WHITE);
                 initLifeBar(game.add.graphics(game.world.width - 272, 50), WHITE);
@@ -230,107 +249,37 @@
                 initLifeBar(lifeBar1, GREEN);
                 initLifeBar(lifeBar2, GREEN);
 
-
-                collectables = game.add.group();
-                collectables.enableBody = true;
-                shots1 = game.add.group();
-                shots1.enableBody = true;
-                shots2 = game.add.group();
-                shots2.enableBody = true;
-
                 player1 = game.add.sprite(32, game.world.height - 112, 'pikachu');
                 player2 = game.add.sprite(game.world.width - 64, game.world.height - 112, 'charmander');
                 initPlayer(player1);
                 initPlayer(player2);
 
-                scoreText1 = game.add.text(16, 16, 'Tiros: 0', { fontSize: '20px', fill: '#000' });
-                scoreText2 = game.add.text(game.world.width - 150, 16, 'Tiros: 0', { fontSize: '20px', fill: '#000' });
-                timeText = game.add.text(game.world.width - 470, 12, 'Tiempo: ' + time, { fontSize: '32px', fill: '#000' });
+                scoreText1 = game.add.text(16, 16, 'Tiros: 0', { font: '20px Arial' });
+                scoreText2 = game.add.text(game.world.width - 100, 16, 'Tiros: 0', { font: '20px Arial' });
+                timeText = game.add.text(game.world.centerX, 20, 'Tiempo: ' + time, { font: '30px Arial' });
+                timeText.anchor.set(0.5);
+                roundText = game.add.text(game.world.centerX, 50, 'Round ' + round, { font: '20px Arial' });
+                roundText.anchor.set(0.5)
 
                 state = READY;
                 player1.body.gravity.y = GRAVITY;
                 player2.body.gravity.y = GRAVITY;
-                var style = { font: "80px Arial", fill: RED, wordWrap: true, wordWrapWidth: game.world.width, wordWrapHeight: game.world.height, align: "center", backgroundColor: "#ffffff" };
-                readyText = game.add.text(game.world.centerX, game.world.centerY, 'Round 1', style);
+
+                readyText = game.add.text(game.world.centerX, game.world.centerY, 'Round '+round,  { font: "80px Arial", align: "center" });
                 readyText.anchor.set(0.5);
-                intro.pause();
+
                 battle = game.add.audio('battle');
                 battle.play('', 0, 1, true);
             }
-            function pause() {
-                battle.pause();
-                game.add.audio('pause').play('', 0, 1, false);
-                background_pause = game.add.sprite(0, 0, 'background_pause');
-                state = PAUSED;
-                dataPause.push(player1.body.velocity.x);
-                dataPause.push(player1.body.velocity.y);
-                dataPause.push(player2.body.velocity.x);
-                dataPause.push(player2.body.velocity.y);
-                player1.body.gravity.y = 0;
-                player1.body.velocity.x = 0;
-                player1.body.velocity.y = 0;
-                player2.body.gravity.y = 0;
-                player2.body.velocity.x = 0;
-                player2.body.velocity.y = 0;
-                for (var i = 0; i < collectables.children.length; i++) {
-                    dataPause.push(collectables.children[i].body.velocity.x);
-                    dataPause.push(collectables.children[i].body.velocity.y);
-                    collectables.children[i].body.gravity.y = 0;
-                    collectables.children[i].body.velocity.x = 0;
-                    collectables.children[i].body.velocity.y = 0;
-                }
-                for (var i = 0; i < platforms.children.length; i++) {
-                    dataPause.push(platforms.children[i].body.velocity.x);
-                    platforms.children[i].body.velocity.x = 0;
-                }
-                for (var i = 0; i < shots1.children.length; i++) {
-                    dataPause.push(shots1.children[i].body.velocity.x);
-                    dataPause.push(shots1.children[i].body.velocity.y);
-                    shots1.children[i].body.velocity.x = 0;
-                    shots1.children[i].body.velocity.y = 0;
-                }
-                for (var i = 0; i < shots2.children.length; i++) {
-                    dataPause.push(shots2.children[i].body.velocity.x);
-                    dataPause.push(shots2.children[i].body.velocity.y);
-                    shots2.children[i].body.velocity.x = 0;
-                    shots2.children[i].body.velocity.y = 0;
-                }
-            }
-            function unpause() {
-                game.add.audio('pause').play('', 0, 1, false);
-                battle.resume();
-                background_pause.kill();
-                state = PLAYING;
-                player1.body.gravity.y = GRAVITY;
-                player1.body.velocity.x = dataPause.shift();
-                player1.body.velocity.y = dataPause.shift();
-                player2.body.gravity.y = GRAVITY;
-                player2.body.velocity.x = dataPause.shift();
-                player2.body.velocity.y = dataPause.shift();
-                for (var i = 0; i < collectables.children.length; i++) {
-                    collectables.children[i].body.gravity.y = GRAVITY;
-                    collectables.children[i].body.velocity.x = dataPause.shift();
-                    collectables.children[i].body.velocity.y = dataPause.shift();
-                }
-                for (var i = 0; i < platforms.children.length; i++) {
-                    platforms.children[i].body.velocity.x = dataPause.shift();
-                }
-                for (var i = 0; i < shots1.children.length; i++) {
-                    shots1.children[i].body.velocity.x = dataPause.shift();
-                    shots1.children[i].body.velocity.y = dataPause.shift();
-                }
-                for (var i = 0; i < shots2.children.length; i++) {
-                    shots2.children[i].body.velocity.x = dataPause.shift();
-                    shots2.children[i].body.velocity.y = dataPause.shift();
-                }
-            }
-            function finishGame() {
+
+            
+            function finishRound() {
+                state = FINISH_ROUND;
                 fps = 0;
+
                 background_pause = game.add.sprite(0, 0, 'background_pause');
                 battle.pause();
                 game.add.audio('die').play('', 0, 1, false);
-
-                state = FINISHED;
 
                 if (lifeBar1.scale.x == 0) {
                     win2();
@@ -352,8 +301,9 @@
                                     } else {
                                         player1.animations.play('die');
                                         player2.animations.play('die');
-                                        var style = { font: "80px Arial", fill: "#FCD516", wordWrap: true, wordWrapWidth: game.world.width, wordWrapHeight: game.world.height, align: "center", backgroundColor: "#ffffff" };
-                                        game.add.text(game.world.centerX, game.world.centerY, 'Empate', style);
+                                        var style = { font: "80px Arial", fill: "#FCD516", align: "center"};
+                                        winText = game.add.text(game.world.centerX, 200, 'Jugador 2 ¡GANA!', style);
+                                        winText.anchor.set(0.5);
                                     }
                                 }
                             }
@@ -380,21 +330,60 @@
                     shots2.children[i].body.velocity.x = dataPause.shift();
                     shots2.children[i].body.velocity.y = dataPause.shift();
                 }
-            }
 
-            function win1() {
-                player2.animations.play('die');
-                player1.animations.play('front');
-                var style = { font: "60px Arial", fill: "#FCD516", wordWrap: true, wordWrapWidth: game.world.width, wordWrapHeight: game.world.height, align: "center", backgroundColor: "#ffffff" };
-                var text = game.add.text(game.world.centerX, game.world.centerY, 'Jugador 1 ¡GANA!', style);
-                text.anchor.set(0.5);
+                btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', nextRound, this, 2, 1, 0);
             }
-            function win2() {
-                player1.animations.play('die');
-                player2.animations.play('front');
-                var style = { font: "60px Arial", fill: "#FCD516", wordWrap: true, wordWrapWidth: game.world.width, wordWrapHeight: game.world.height, align: "center", backgroundColor: "#ffffff" };
-                var text = game.add.text(game.world.centerX, game.world.centerY, 'Jugador 2 ¡GANA!', style);
-                text.anchor.set(0.5);
+            function nextRound() {
+                winText.destroy();
+                state = READY;
+                background_pause.kill();
+                btnStart.destroy();
+                player1.destroy();
+                player2.destroy();
+                score1 = 0;
+                score2 = 0;
+                time = ROUND_TIME;
+                round += 1;
+                fps = 0;
+                directions = [WITHOUT_DIRECTION, WITHOUT_DIRECTION];
+                for (var i = 0; i < collectables.children.length; i++) {
+                    collectables.children[i].kill();
+                }
+                for (var i = 0; i < platforms.children.length; i++) {
+                    platforms.children[i].kill();
+                }
+                for (var i = 0; i < shots1.children.length; i++) {
+                    shots1.children[i].kill();
+                }
+                for (var i = 0; i < shots2.children.length; i++) {
+                    shots2.children[i].kill();
+                }
+
+                initRound();
+            }
+            function initRound() {
+
+                initPlatforms(platforms);
+                lifeBar1.scale.x = 1;
+                lifeBar2.scale.x = 1;
+
+                scoreText1.text = 'Tiros: ' + score1;
+                scoreText2.text = 'Tiros: ' + score2;
+                roundText.text = 'Round ' + round;
+                timeText.text = 'Tiempo: ' + time;
+
+                player1 = game.add.sprite(32, game.world.height - 112, 'pikachu');
+                player2 = game.add.sprite(game.world.width - 64, game.world.height - 112, 'charmander');
+                initPlayer(player1);
+                initPlayer(player2);
+
+                battle.play('', 0, 1, true);
+            }
+            function finishGame() {
+                state = FINISHED;
+            }
+            function resetGame() {
+                state = INIT;
             }
         </script>
 
