@@ -27,19 +27,26 @@ function launchCloud() {
         cloud.scale.setTo(0.4, 0.3);
         //cloud.body.velocity.x = 80;
         cloud.body.velocity.x = game.rnd.integerInRange(50, 80);
+        cloud.body.checkCollision.up = true;
+        cloud.body.checkCollision.down = false;
+        cloud.body.checkCollision.left = false;
+        cloud.body.checkCollision.right = false;
     }
 }
 function changeTime() {
     if (fps % 60 == 0) {
         time--;
         timeText.text = 'Tiempo: ' + time;
-        launchCollectable(true);
         switch (time) {
             case 0:
                 finishGame();
                 break;
             case 56:
                 readyText.destroy();
+        }
+    } else {
+        if (fps % 120 == 0) {
+            launchCollectable(true);
         }
     }
 }
@@ -118,7 +125,7 @@ function shoot2() {
 function hitTo1(player, shoot) {
     game.add.audio('hit').play('', 0, 1, false);
     shoot.kill();
-    lifeBar1.scale.x -= game.rnd.realInRange(0.1, 0.15);
+    lifeBar1.scale.x -= game.rnd.realInRange(0.05, 0.12);
     if (lifeBar1.scale.x < 0.15) {
         lifeBar1.tint = RED;
     } else {

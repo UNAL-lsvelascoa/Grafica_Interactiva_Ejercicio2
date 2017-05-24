@@ -1,7 +1,7 @@
-﻿<!doctype html> 
-<html lang="en"> 
-    <head> 
-	    <meta charset="UTF-8" />
+﻿<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
         <meta name="author" content="Erick Steven Velasco">
         <title>Gráfica interactiva</title>
         <script type="text/javascript" src="js/phaser.min.js"></script>
@@ -116,9 +116,12 @@
                 game.add.sprite(0, 0, 'background');
                 game.physics.startSystem(Phaser.Physics.ARCADE);
 
-                logo = game.add.sprite(game.world.centerX - 150, 100, 'logo');
+                platforms = game.add.group();
+                initPlatforms(platforms);
 
-                btnStart = game.add.button(game.world.centerX - 100, 350, 'btnStart', initGame, this, 2, 1, 0);
+                logo = game.add.sprite(game.world.centerX - 223, 100, 'logo');
+
+                btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', initGame, this, 2, 1, 0);
 
                 /*btnStart.onInputOver.add(over, this);
                 btnStart.onInputOut.add(out, this);
@@ -132,11 +135,14 @@
 
                 switch (state) {
                     case INIT:
+                        fps++;
+                        launchCloud();
                         if (enter.isDown) {
                             initGame();
                         }
                         break;
                     case READY:
+                        launchCloud();
                         logo.destroy();
                         fps++;
                         game.physics.arcade.collide(collectables, platforms);
@@ -167,10 +173,10 @@
                         game.physics.arcade.collide(player2, platforms);
                         game.physics.arcade.overlap(player1, collectables, collect1, null, this);
                         game.physics.arcade.overlap(player2, collectables, collect2, null, this);
-                        
+
                         move(player1, left1, right1, up1, 0);
                         move(player2, left2, right2, up2, 1);
-                        
+
                         changeTime();
                         fps++;
 
@@ -214,7 +220,7 @@
             };
 
             function initGame() {
-
+                fps = 0;
                 btnStart.destroy();
 
                 initLifeBar(game.add.graphics(16, 50), WHITE);
@@ -224,8 +230,6 @@
                 initLifeBar(lifeBar1, GREEN);
                 initLifeBar(lifeBar2, GREEN);
 
-                platforms = game.add.group();
-                initPlatforms(platforms);
 
                 collectables = game.add.group();
                 collectables.enableBody = true;
