@@ -8,8 +8,8 @@ function collect2(player, collectable) {
     score2 += 1;
     scoreText2.text = 'Tiros: ' + score2;
 }
-function launchCollectable() {
-    if (game.rnd.integerInRange(1, 60) % 60 == 0) {
+function launchCollectable(launch) {
+    if (game.rnd.integerInRange(1, 60) % 60 == 0 || launch) {
         var star = collectables.create(game.rnd.integerInRange(0, 800), 0, 'collectable');
 
         star.body.gravity.y = GRAVITY;
@@ -33,7 +33,7 @@ function changeTime() {
     if (fps % 60 == 0) {
         time--;
         timeText.text = 'Tiempo: ' + time;
-        launchCollectable();
+        launchCollectable(true);
         switch (time) {
             case 0:
                 finishGame();

@@ -22,8 +22,10 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\buttons\btnStart.png" />
     <Content Include="assets\characters\charmander.png" />
     <Content Include="assets\characters\pikachu.png" />
+    <Content Include="assets\logo.png" />
     <Content Include="assets\platform_cloud.png" />
     <Content Include="assets\shoot2.png" />
     <Content Include="assets\shoot1.png" />

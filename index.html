@@ -26,7 +26,7 @@
             var READY = 4;
             var LIMIT_LAUNCH = 100;
             var GREEN = 0x00FF00;
-            var YELLOW = 0xFFFF00;
+            var YELLOW = 0xFCD516;
             var RED = 0xFF0000;
             var WHITE = 0xFFFFFF;
             var WITHOUT_DIRECTION = 0;
@@ -44,6 +44,7 @@
             var lifeBar1;
             var lifeBar2;
             var background_pause;
+            var logo;
 
             //Keys
             var left1;
@@ -88,6 +89,7 @@
             var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
             function preload() {
+                game.load.image('logo', 'assets/logo.png');
                 game.load.image('background', 'assets/background.png');
                 game.load.image('background_pause', 'assets/background_pause.png');
                 game.load.image('ground', 'assets/platform_ground.png');
@@ -104,6 +106,8 @@
                 game.load.audio('shoot1', 'assets/sounds/shoot1.mp3');
                 game.load.audio('shoot2', 'assets/sounds/shoot2.mp3');
                 game.load.audio('pause', 'assets/sounds/pause.mp3');
+                game.load.image('btnStart', 'assets/buttons/btnStart.png');
+                //game.load.spritesheet('button', 'assets/buttons/button_sprite_sheet.png', 193, 71);
             };
 
             function create() {
@@ -111,6 +115,14 @@
                 intro.play('', 0, 1, true);
                 game.add.sprite(0, 0, 'background');
                 game.physics.startSystem(Phaser.Physics.ARCADE);
+
+                logo = game.add.sprite(game.world.centerX - 150, 100, 'logo');
+
+                btnStart = game.add.button(game.world.centerX - 100, 350, 'btnStart', initGame, this, 2, 1, 0);
+
+                /*btnStart.onInputOver.add(over, this);
+                btnStart.onInputOut.add(out, this);
+                btnStart.onInputUp.add(up, this);*/
 
                 initKeys();
             };
@@ -125,6 +137,7 @@
                         }
                         break;
                     case READY:
+                        logo.destroy();
                         fps++;
                         game.physics.arcade.collide(collectables, platforms);
                         game.physics.arcade.collide(player1, platforms);
@@ -146,7 +159,7 @@
                         }
                         break;
                     case PLAYING:
-                        launchCollectable();
+                        launchCollectable(false);
                         launchCloud();
 
                         game.physics.arcade.collide(collectables, platforms);
@@ -201,6 +214,8 @@
             };
 
             function initGame() {
+
+                btnStart.destroy();
 
                 initLifeBar(game.add.graphics(16, 50), WHITE);
                 initLifeBar(game.add.graphics(game.world.width - 272, 50), WHITE);
@@ -306,7 +321,7 @@
                 }
             }
             function finishGame() {
-                //{ font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" }
+                fps = 0;
                 background_pause = game.add.sprite(0, 0, 'background_pause');
                 battle.pause();
                 game.add.audio('die').play('', 0, 1, false);
@@ -314,31 +329,27 @@
                 state = FINISHED;
 
                 if (lifeBar1.scale.x == 0) {
-                    player1.animations.play('die');
-                    player2.animations.play('front');
+                    win2();
                 } else {
                     if (lifeBar2.scale.x == 0) {
-                        player2.animations.play('die');
-                        player1.animations.play('front');
+                        win1();
                     } else {
                         if (lifeBar1.scale.x < lifeBar2.scale.x) {
-                            player1.animations.play('die');
-                            player2.animations.play('front');
+                            win2();
                         } else {
                             if (lifeBar2.scale.x < lifeBar1.scale.x) {
-                                player2.animations.play('die');
-                                player1.animations.play('front');
+                                win1();
                             } else {
                                 if (score1 < score2) {
-                                    player1.animations.play('die');
-                                    player2.animations.play('front');
+                                    win2();
                                 } else {
                                     if (score2 < score1) {
-                                        player2.animations.play('die');
-                                        player1.animations.play('front');
+                                        win1();
                                     } else {
                                         player1.animations.play('die');
                                         player2.animations.play('die');
+                                        var style = { font: "80px Arial", fill: "#FCD516", wordWrap: true, wordWrapWidth: game.world.width, wordWrapHeight: game.world.height, align: "center", backgroundColor: "#ffffff" };
+                                        game.add.text(game.world.centerX, game.world.centerY, 'Empate', style);
                                     }
                                 }
                             }
@@ -365,6 +376,21 @@
                     shots2.children[i].body.velocity.x = dataPause.shift();
                     shots2.children[i].body.velocity.y = dataPause.shift();
                 }
+            }
+
+            function win1() {
+                player2.animations.play('die');
+                player1.animations.play('front');
+                var style = { font: "60px Arial", fill: "#FCD516", wordWrap: true, wordWrapWidth: game.world.width, wordWrapHeight: game.world.height, align: "center", backgroundColor: "#ffffff" };
+                var text = game.add.text(game.world.centerX, game.world.centerY, 'Jugador 1 ¡GANA!', style);
+                text.anchor.set(0.5);
+            }
+            function win2() {
+                player1.animations.play('die');
+                player2.animations.play('front');
+                var style = { font: "60px Arial", fill: "#FCD516", wordWrap: true, wordWrapWidth: game.world.width, wordWrapHeight: game.world.height, align: "center", backgroundColor: "#ffffff" };
+                var text = game.add.text(game.world.centerX, game.world.centerY, 'Jugador 2 ¡GANA!', style);
+                text.anchor.set(0.5);
             }
         </script>
 
