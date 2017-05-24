@@ -372,6 +372,9 @@
                 roundText.text = 'Round ' + round;
                 timeText.text = 'Tiempo: ' + time;
 
+                readyText = game.add.text(game.world.centerX, game.world.centerY, 'Round ' + round, { font: "80px Arial", align: "center" });
+                readyText.anchor.set(0.5);
+
                 player1 = game.add.sprite(32, game.world.height - 112, 'pikachu');
                 player2 = game.add.sprite(game.world.width - 64, game.world.height - 112, 'charmander');
                 initPlayer(player1);
