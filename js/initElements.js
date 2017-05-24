@@ -40,9 +40,4 @@ function initPlatforms(platforms) {
     ground.scale.setTo(2, 1);
     ground.body.immovable = true;
 
-    for (var i = 0; i < 7; i++) {
-        var cloud = platforms.create(game.rnd.integerInRange(-100, 700), game.rnd.integerInRange(100, 300), 'cloud');
-        cloud.body.immovable = true;
-        cloud.scale.setTo(0.4, 0.4);
-    }
 }

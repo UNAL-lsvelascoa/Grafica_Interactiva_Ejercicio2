@@ -20,10 +20,20 @@ function launchCollectable() {
         star.body.bounce.x = 1;
     }
 }
+function launchCloud() {
+    if (fps % 80 == 0) {
+        var cloud = platforms.create(-180, game.rnd.integerInRange(100, 500), 'cloud');
+        cloud.body.immovable = true;
+        cloud.scale.setTo(0.4, 0.3);
+        //cloud.body.velocity.x = 80;
+        cloud.body.velocity.x = game.rnd.integerInRange(50, 80);
+    }
+}
 function changeTime() {
     if (fps % 60 == 0) {
         time--;
         timeText.text = 'Tiempo: ' + time;
+        launchCollectable();
         switch (time) {
             case 0:
                 finishGame();
@@ -61,7 +71,7 @@ function move(player, left, right, up, indexPlayer) {
         }
     }
     if (up.isDown && player.body.touching.down) {
-        player.body.velocity.y = -450;
+        player.body.velocity.y = -550;
     }
 }
 function shoot1() {
