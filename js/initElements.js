@@ -1,6 +1,6 @@
-﻿function initLifeBar(lifeBar) {
+﻿function initLifeBar(lifeBar, tint) {
     lifeBar.lineStyle(5, 0xffffff, 1);
-    lifeBar.tint = GREEN;
+    lifeBar.tint = tint;
     lifeBar.moveTo(0, 0);
     lifeBar.lineTo(250, 0);
     lifeBar.scale.x = 1;
@@ -41,7 +41,7 @@ function initPlatforms(platforms) {
     ground.body.immovable = true;
 
     for (var i = 0; i < 7; i++) {
-        var cloud = platforms.create(game.rnd.integerInRange(-100, 700), game.rnd.integerInRange(100, 400), 'cloud');
+        var cloud = platforms.create(game.rnd.integerInRange(-100, 700), game.rnd.integerInRange(100, 300), 'cloud');
         cloud.body.immovable = true;
         cloud.scale.setTo(0.4, 0.4);
     }

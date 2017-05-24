@@ -23,10 +23,12 @@
             var PLAYING = 1;
             var PAUSED = 2;
             var FINISHED = 3;
+            var READY = 4;
             var LIMIT_LAUNCH = 100;
             var GREEN = 0x00FF00;
             var YELLOW = 0xFFFF00;
             var RED = 0xFF0000;
+            var WHITE = 0xFFFFFF;
             var WITHOUT_DIRECTION = 0;
             var LEFT_DIRECTION = 1;
             var RIGHT_DIRECTION = 2;
@@ -65,6 +67,7 @@
             var scoreText2;
             var time = 60;
             var timeText;
+            var readyText;
 
             //For States
             var dataPause = [];
@@ -73,6 +76,11 @@
             var directions = [WITHOUT_DIRECTION, WITHOUT_DIRECTION];
             var isShooting1 = false;
             var isShooting2 = false;
+
+            //Sounds
+            var battle;
+            var hit;
+
 
             var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
@@ -86,16 +94,19 @@
                 game.load.image('shoot2', 'assets/shoot2.png');
                 game.load.spritesheet('pikachu', 'assets/characters/pikachu.png', 48, 48);
                 game.load.spritesheet('charmander', 'assets/characters/charmander.png', 48, 48);
+                game.load.audio('battle', 'assets/sounds/battle.mp3');
             };
 
             function create() {
                 game.add.sprite(0, 0, 'background');
                 game.physics.startSystem(Phaser.Physics.ARCADE);
 
+                initLifeBar(game.add.graphics(16, 50), WHITE);
+                initLifeBar(game.add.graphics(game.world.width - 272, 50), WHITE);
                 lifeBar1 = game.add.graphics(16, 50);
                 lifeBar2 = game.add.graphics(game.world.width - 272, 50);
-                initLifeBar(lifeBar1);
-                initLifeBar(lifeBar2);
+                initLifeBar(lifeBar1, GREEN);
+                initLifeBar(lifeBar2, GREEN);
 
                 platforms = game.add.group();
                 initPlatforms(platforms);
@@ -126,6 +137,27 @@
                     case INIT:
                         if (enter.isDown) {
                             initGame();
+                        }
+                        break;
+                    case READY:
+                        fps++;
+                        game.physics.arcade.collide(collectables, platforms);
+                        game.physics.arcade.collide(player1, platforms);
+                        game.physics.arcade.collide(player2, platforms);
+                        game.physics.arcade.overlap(player1, collectables, collect1, null, this);
+                        game.physics.arcade.overlap(player2, collectables, collect2, null, this);
+                        if (fps == 120) {
+                            readyText.text = 'Ready';
+                        } else {
+                            if (fps == 240) {
+                                readyText.text = 'Set';
+                            } else {
+                                if (fps == 360) {
+                                    readyText.text = 'Go';
+                                    state = PLAYING;
+                                    fps = 0;
+                                }
+                            }
                         }
                         break;
                     case PLAYING:
@@ -183,9 +215,14 @@
             };
 
             function initGame() {
-                state = PLAYING;
+                state = READY;
                 player1.body.gravity.y = GRAVITY;
                 player2.body.gravity.y = GRAVITY;
+                battle = game.add.audio('battle');
+                var style = { font: "80px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: game.world.width, wordWrapHeight: game.world.height, align: "center", background: "#ffffff" };
+                readyText = game.add.text(game.world.centerX, game.world.centerY, 'Round 1', style);
+                readyText.anchor.set(0.5);
+                battle.play('', 0, 1, true);
             }
             function pause() {
                 background_pause = game.add.sprite(0, 0, 'background_pause');

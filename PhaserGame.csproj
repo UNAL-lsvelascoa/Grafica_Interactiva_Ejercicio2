@@ -32,6 +32,7 @@
     <Content Include="assets\background.png" />
     <Content Include="assets\collectable.png" />
     <Content Include="assets\background_pause.png" />
+    <Content Include="assets\sounds\battle.mp3" />
     <Content Include="index.html" />
     <Content Include="js\actions.js" />
     <Content Include="js\initElements.js" />
@@ -46,6 +47,7 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>

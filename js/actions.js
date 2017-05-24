@@ -24,8 +24,12 @@ function changeTime() {
     if (fps % 60 == 0) {
         time--;
         timeText.text = 'Tiempo: ' + time;
-        if (time == 0) {
-            finishGame();
+        switch (time) {
+            case 0:
+                finishGame();
+                break;
+            case 56:
+                readyText.destroy();
         }
     }
 }
