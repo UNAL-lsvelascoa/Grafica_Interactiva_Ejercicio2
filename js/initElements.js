@@ -9,8 +9,8 @@
 
 function initPlayer(player) {
     game.physics.arcade.enable(player);
-    player.body.gravity.y = 0;
     player.body.collideWorldBounds = true;
+    player.body.gravity.y = GRAVITY;
     player.animations.add('right', [1, 2, 3, 4, 5], 10, true);
     player.animations.add('left', [6, 7, 8, 9, 10], 10, true);
     player.animations.add('front', [11, 12, 13, 14, 15], 10, true);

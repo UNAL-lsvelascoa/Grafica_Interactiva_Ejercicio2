@@ -43,6 +43,7 @@
     <Content Include="assets\sounds\shoot2.mp3" />
     <Content Include="assets\sounds\shoot1.mp3" />
     <Content Include="index.html" />
+    <Content Include="js\loads.js" />
     <Content Include="js\states.js" />
     <Content Include="js\actions.js" />
     <Content Include="js\initElements.js" />

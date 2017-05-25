@@ -1,4 +1,66 @@
-﻿function pause() {
+﻿function postCreate() {
+    player1.destroy();
+    intro = game.add.audio('intro');
+    intro.play('', 0, 1, true);
+    game.add.sprite(0, 0, 'background');
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+
+    platforms = game.add.group();
+    initPlatforms(platforms);
+
+    collectables = game.add.group();
+    collectables.enableBody = true;
+    shots1 = game.add.group();
+    shots1.enableBody = true;
+    shots2 = game.add.group();
+    shots2.enableBody = true;
+
+    logo = game.add.sprite(game.world.centerX - 223, 100, 'logo');
+    btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', initGame, this, 2, 1, 0);
+
+    /*btnStart.onInputOver.add(over, this);
+    btnStart.onInputOut.add(out, this);
+    btnStart.onInputUp.add(up, this);*/
+
+    initKeys();
+}
+
+function initGame() {
+    fps = 0;
+    btnStart.destroy();
+    intro.pause();
+    logo.destroy();
+
+    initLifeBar(game.add.graphics(16, 50), WHITE);
+    initLifeBar(game.add.graphics(game.world.width - 272, 50), WHITE);
+    lifeBar1 = game.add.graphics(16, 50);
+    lifeBar2 = game.add.graphics(game.world.width - 272, 50);
+    initLifeBar(lifeBar1, GREEN);
+    initLifeBar(lifeBar2, GREEN);
+
+    player1 = game.add.sprite(32, game.world.height - 112, 'pikachu');
+    player2 = game.add.sprite(game.world.width - 64, game.world.height - 112, 'charmander');
+    initPlayer(player1);
+    initPlayer(player2);
+
+    scoreText1 = game.add.text(16, 16, 'Tiros: 0', { font: '20px Arial' });
+    scoreText2 = game.add.text(game.world.width - 100, 16, 'Tiros: 0', { font: '20px Arial' });
+    timeText = game.add.text(game.world.centerX, 20, 'Tiempo: ' + time, { font: '30px Arial' });
+    timeText.anchor.set(0.5);
+    roundText = game.add.text(game.world.centerX, 50, 'Round ' + round, { font: '20px Arial' });
+    roundText.anchor.set(0.5)
+
+    state = READY;
+
+    readyText = game.add.text(game.world.centerX, game.world.centerY, 'Round ' + round, { font: "80px Arial", align: "center" });
+    readyText.anchor.set(0.5);
+
+    battle = game.add.audio('battle');
+    battle.play('', 0, 1, true);
+}
+
+
+function pause() {
     battle.pause();
     game.add.audio('pause').play('', 0, 1, false);
     background_pause = game.add.sprite(0, 0, 'background_pause');

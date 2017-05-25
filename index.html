@@ -8,6 +8,7 @@
         <script type="text/javascript" src="js/actions.js"></script>
         <script type="text/javascript" src="js/initElements.js"></script>
         <script type="text/javascript" src="js/states.js"></script>
+        <script type="text/javascript" src="js/loads.js"></script>
         <style type="text/css">
             body {
                 margin: 0;
@@ -27,6 +28,7 @@
             var FINISHED = 3;
             var READY = 4;
             var FINISH_ROUND = 5;
+            var LOADING = 6;
             var LIMIT_LAUNCH = 100;
             var GREEN = 0x00FF00;
             var YELLOW = 0xFCD516;
@@ -77,7 +79,7 @@
 
             //For States
             var dataPause = [];
-            var state = INIT;
+            var state = LOADING;
             var fps = 0;
             var directions = [WITHOUT_DIRECTION, WITHOUT_DIRECTION];
             var isShooting1 = false;
@@ -99,51 +101,17 @@
             var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
             function preload() {
-                game.load.image('logo', 'assets/logo.png');
-                game.load.image('background', 'assets/background.png');
-                game.load.image('background_pause', 'assets/background_pause.png');
-                game.load.image('ground', 'assets/platform_ground.png');
-                game.load.image('cloud', 'assets/platform_cloud.png');
-                game.load.image('collectable', 'assets/collectable.png');
-                game.load.image('shoot1', 'assets/shoot1.png');
-                game.load.image('shoot2', 'assets/shoot2.png');
                 game.load.spritesheet('pikachu', 'assets/characters/pikachu.png', 48, 48);
-                game.load.spritesheet('charmander', 'assets/characters/charmander.png', 48, 48);
-                game.load.audio('battle', 'assets/sounds/battle.mp3');
-                game.load.audio('intro', 'assets/sounds/intro.mp3');
-                game.load.audio('hit', 'assets/sounds/hit.mp3');
-                game.load.audio('die', 'assets/sounds/die.mp3');
-                game.load.audio('shoot1', 'assets/sounds/shoot1.mp3');
-                game.load.audio('shoot2', 'assets/sounds/shoot2.mp3');
-                game.load.audio('pause', 'assets/sounds/pause.mp3');
-                game.load.image('btnStart', 'assets/buttons/btnStart.png');
-                //game.load.spritesheet('button', 'assets/buttons/button_sprite_sheet.png', 193, 71);
+
+
+                game.load.onLoadStart.add(loadStart, this);
+                game.load.onFileComplete.add(fileComplete, this);
+                game.load.onLoadComplete.add(loadComplete, this);
+
             };
 
             function create() {
-                intro = game.add.audio('intro');
-                intro.play('', 0, 1, true);
-                game.add.sprite(0, 0, 'background');
-                game.physics.startSystem(Phaser.Physics.ARCADE);
-
-                platforms = game.add.group();
-                initPlatforms(platforms);
-
-                collectables = game.add.group();
-                collectables.enableBody = true;
-                shots1 = game.add.group();
-                shots1.enableBody = true;
-                shots2 = game.add.group();
-                shots2.enableBody = true;
-
-                logo = game.add.sprite(game.world.centerX - 223, 100, 'logo');
-                btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', initGame, this, 2, 1, 0);
-
-                /*btnStart.onInputOver.add(over, this);
-                btnStart.onInputOut.add(out, this);
-                btnStart.onInputUp.add(up, this);*/
-
-                initKeys();
+                loadAssets();
             };
 
 
@@ -152,6 +120,8 @@
                 fps++;
 
                 switch (state) {
+                    case LOADING:
+                        break;
                     case INIT:
                         launchCloud();
                         if (enter.isDown) {
@@ -235,43 +205,6 @@
 
                 }
             };
-
-            function initGame() {
-                fps = 0;
-                btnStart.destroy();
-                intro.pause();
-                logo.destroy();
-
-                initLifeBar(game.add.graphics(16, 50), WHITE);
-                initLifeBar(game.add.graphics(game.world.width - 272, 50), WHITE);
-                lifeBar1 = game.add.graphics(16, 50);
-                lifeBar2 = game.add.graphics(game.world.width - 272, 50);
-                initLifeBar(lifeBar1, GREEN);
-                initLifeBar(lifeBar2, GREEN);
-
-                player1 = game.add.sprite(32, game.world.height - 112, 'pikachu');
-                player2 = game.add.sprite(game.world.width - 64, game.world.height - 112, 'charmander');
-                initPlayer(player1);
-                initPlayer(player2);
-
-                scoreText1 = game.add.text(16, 16, 'Tiros: 0', { font: '20px Arial' });
-                scoreText2 = game.add.text(game.world.width - 100, 16, 'Tiros: 0', { font: '20px Arial' });
-                timeText = game.add.text(game.world.centerX, 20, 'Tiempo: ' + time, { font: '30px Arial' });
-                timeText.anchor.set(0.5);
-                roundText = game.add.text(game.world.centerX, 50, 'Round ' + round, { font: '20px Arial' });
-                roundText.anchor.set(0.5)
-
-                state = READY;
-                player1.body.gravity.y = GRAVITY;
-                player2.body.gravity.y = GRAVITY;
-
-                readyText = game.add.text(game.world.centerX, game.world.centerY, 'Round '+round,  { font: "80px Arial", align: "center" });
-                readyText.anchor.set(0.5);
-
-                battle = game.add.audio('battle');
-                battle.play('', 0, 1, true);
-            }
-
             
             function finishRound() {
                 state = FINISH_ROUND;
@@ -365,7 +298,9 @@
 
                 initPlatforms(platforms);
                 lifeBar1.scale.x = 1;
+                lifeBar1.tint = GREEN;
                 lifeBar2.scale.x = 1;
+                lifeBar2.tint = GREEN;
 
                 scoreText1.text = 'Tiros: ' + score1;
                 scoreText2.text = 'Tiros: ' + score2;
