@@ -1,4 +1,5 @@
 ﻿function postCreate() {
+    state = INIT;
     player1.destroy();
     intro = game.add.audio('intro');
     intro.play('', 0, 1, true);
@@ -50,13 +51,13 @@ function initGame() {
     roundText = game.add.text(game.world.centerX, 50, 'Round ' + round, { font: '20px Arial' });
     roundText.anchor.set(0.5)
 
-    state = READY;
-
     readyText = game.add.text(game.world.centerX, game.world.centerY, 'Round ' + round, { font: "80px Arial", align: "center" });
     readyText.anchor.set(0.5);
 
     battle = game.add.audio('battle');
     battle.play('', 0, 1, true);
+
+    state = READY;
 }
 
 
@@ -127,4 +128,123 @@ function unpause() {
         shots2.children[i].body.velocity.x = dataPause.shift();
         shots2.children[i].body.velocity.y = dataPause.shift();
     }
+}
+
+function finishRound() {
+    var isFinal = false;
+    state = FINISH_ROUND;
+    fps = 0;
+
+    battle.pause();
+    player1.body.velocity.x = 0;
+    player2.body.velocity.x = 0;
+
+    for (var i = 0; i < collectables.children.length; i++) {
+        collectables.children[i].body.gravity.y = 0;
+        collectables.children[i].body.velocity.x = 0;
+        collectables.children[i].body.velocity.y = 0;
+    }
+    for (var i = 0; i < platforms.children.length; i++) {
+        platforms.children[i].body.velocity.x = 0;
+    }
+    for (var i = 0; i < shots1.children.length; i++) {
+        shots1.children[i].body.velocity.x = 0;
+        shots1.children[i].body.velocity.y = 0;
+    }
+    for (var i = 0; i < shots2.children.length; i++) {
+        shots2.children[i].body.velocity.x = 0;
+        shots2.children[i].body.velocity.y = 0;
+    }
+
+    if (lifeBar1.scale.x == 0) {
+        isFinal = win2();
+    } else {
+        if (lifeBar2.scale.x == 0) {
+            isFinal = win1();
+        } else {
+            if (lifeBar1.scale.x < lifeBar2.scale.x) {
+                isFinal = win2();
+            } else {
+                if (lifeBar2.scale.x < lifeBar1.scale.x) {
+                    isFinal = win1();
+                } else {
+                    if (score1 < score2) {
+                        isFinal = win2();
+                    } else {
+                        if (score2 < score1) {
+                            isFinal = win1();
+                        } else {
+                            player1.animations.play('die');
+                            player2.animations.play('die');
+                            game.add.audio('die').play('', 0, 1, false);
+
+                            var style = { font: "80px Arial", fill: "#FCD516", align: "center" };
+                            winText = game.add.text(game.world.centerX, 200, 'Empate', style);
+                            winText.anchor.set(0.5);
+                            if (winPlayer1 || winPlayer2) {
+                                isFinal = true;
+                            } else {
+                                winPlayer1 = true;
+                                winPlayer2 = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    background_pause = game.add.sprite(0, 0, 'background_pause');
+    game.add.audio('die').play('', 0, 1, false);
+    if (isFinal) {
+        finishGame();
+    } else {
+        btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', nextRound, this, 2, 1, 0);
+    }
+}
+function nextRound() {
+    round++;
+    resetData();
+    initRound();
+}
+
+function initRound() {
+
+    initPlatforms(platforms);
+    lifeBar1.scale.x = 1;
+    lifeBar1.tint = GREEN;
+    lifeBar2.scale.x = 1;
+    lifeBar2.tint = GREEN;
+
+    scoreText1.text = 'Tiros: ' + score1;
+    scoreText2.text = 'Tiros: ' + score2;
+    timeText.text = 'Tiempo: ' + time;
+
+    if (winPlayer1 && winPlayer2) {
+        roundText.text = 'Round final';
+        readyText = game.add.text(game.world.centerX, game.world.centerY, 'Round final', { font: "80px Arial", align: "center" });
+    } else {
+        roundText.text = 'Round ' + round;
+        readyText = game.add.text(game.world.centerX, game.world.centerY, 'Round ' + round, { font: "80px Arial", align: "center" });
+    }
+    readyText.anchor.set(0.5);
+
+    player1 = game.add.sprite(32, game.world.height - 112, 'pikachu');
+    player2 = game.add.sprite(game.world.width - 64, game.world.height - 112, 'charmander');
+    initPlayer(player1);
+    initPlayer(player2);
+
+    battle.play('', 0, 1, true);
+}
+
+function finishGame() {
+    state = FINISHED;
+    btnStart.destroy();
+    round = 1;
+    btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', resetGame, this, 2, 1, 0);
+}
+function resetGame() {
+    state = INIT;
+    resetData();
+    postCreate();
 }

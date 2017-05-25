@@ -40,3 +40,29 @@ function initPlatforms(platforms) {
     ground.scale.setTo(2, 1);
     ground.body.immovable = true;
 }
+
+function resetData() {
+    winText.destroy();
+    state = READY;
+    background_pause.kill();
+    btnStart.destroy();
+    player1.destroy();
+    player2.destroy();
+    score1 = 0;
+    score2 = 0;
+    time = ROUND_TIME;
+    fps = 0;
+    directions = [WITHOUT_DIRECTION, WITHOUT_DIRECTION];
+    for (var i = 0; i < collectables.children.length; i++) {
+        collectables.children[i].kill();
+    }
+    for (var i = 0; i < platforms.children.length; i++) {
+        platforms.children[i].kill();
+    }
+    for (var i = 0; i < shots1.children.length; i++) {
+        shots1.children[i].kill();
+    }
+    for (var i = 0; i < shots2.children.length; i++) {
+        shots2.children[i].kill();
+    }
+}

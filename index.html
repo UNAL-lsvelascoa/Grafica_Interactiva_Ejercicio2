@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="author" content="Erick Steven Velasco">
-        <title>Gráfica interactiva</title>
+        <title>PikaWAR - Gráfica interactiva</title>
         <script type="text/javascript" src="js/phaser.min.js"></script>
         <script type="text/javascript" src="js/actions.js"></script>
         <script type="text/javascript" src="js/initElements.js"></script>
@@ -21,7 +21,7 @@
 
             //Constants
             var GRAVITY = 1000;
-            var ROUND_TIME = 60;
+            var ROUND_TIME = 10;
             var INIT = 0;
             var PLAYING = 1;
             var PAUSED = 2;
@@ -103,11 +103,9 @@
             function preload() {
                 game.load.spritesheet('pikachu', 'assets/characters/pikachu.png', 48, 48);
 
-
                 game.load.onLoadStart.add(loadStart, this);
                 game.load.onFileComplete.add(fileComplete, this);
                 game.load.onLoadComplete.add(loadComplete, this);
-
             };
 
             function create() {
@@ -116,7 +114,6 @@
 
 
             function update() {
-
                 fps++;
 
                 switch (state) {
@@ -124,9 +121,6 @@
                         break;
                     case INIT:
                         launchCloud();
-                        if (enter.isDown) {
-                            initGame();
-                        }
                         break;
                     case READY:
                         launchCloud();
@@ -205,124 +199,6 @@
 
                 }
             };
-            
-            function finishRound() {
-                state = FINISH_ROUND;
-                fps = 0;
-
-                background_pause = game.add.sprite(0, 0, 'background_pause');
-                battle.pause();
-                game.add.audio('die').play('', 0, 1, false);
-
-                if (lifeBar1.scale.x == 0) {
-                    win2();
-                } else {
-                    if (lifeBar2.scale.x == 0) {
-                        win1();
-                    } else {
-                        if (lifeBar1.scale.x < lifeBar2.scale.x) {
-                            win2();
-                        } else {
-                            if (lifeBar2.scale.x < lifeBar1.scale.x) {
-                                win1();
-                            } else {
-                                if (score1 < score2) {
-                                    win2();
-                                } else {
-                                    if (score2 < score1) {
-                                        win1();
-                                    } else {
-                                        player1.animations.play('die');
-                                        player2.animations.play('die');
-                                        var style = { font: "80px Arial", fill: "#FCD516", align: "center"};
-                                        winText = game.add.text(game.world.centerX, 200, 'Jugador 2 ¡GANA!', style);
-                                        winText.anchor.set(0.5);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                player1.body.velocity.x = 0;
-                player2.body.velocity.x = 0;
-
-                for (var i = 0; i < collectables.children.length; i++) {
-                    collectables.children[i].body.gravity.y = 0;
-                    collectables.children[i].body.velocity.x = 0;
-                    collectables.children[i].body.velocity.y = 0;
-                }
-                for (var i = 0; i < platforms.children.length; i++) {
-                    platforms.children[i].body.velocity.x = 0;
-                }
-                for (var i = 0; i < shots1.children.length; i++) {
-                    shots1.children[i].body.velocity.x = dataPause.shift();
-                    shots1.children[i].body.velocity.y = dataPause.shift();
-                }
-                for (var i = 0; i < shots2.children.length; i++) {
-                    shots2.children[i].body.velocity.x = dataPause.shift();
-                    shots2.children[i].body.velocity.y = dataPause.shift();
-                }
-
-                btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', nextRound, this, 2, 1, 0);
-            }
-            function nextRound() {
-                winText.destroy();
-                state = READY;
-                background_pause.kill();
-                btnStart.destroy();
-                player1.destroy();
-                player2.destroy();
-                score1 = 0;
-                score2 = 0;
-                time = ROUND_TIME;
-                round += 1;
-                fps = 0;
-                directions = [WITHOUT_DIRECTION, WITHOUT_DIRECTION];
-                for (var i = 0; i < collectables.children.length; i++) {
-                    collectables.children[i].kill();
-                }
-                for (var i = 0; i < platforms.children.length; i++) {
-                    platforms.children[i].kill();
-                }
-                for (var i = 0; i < shots1.children.length; i++) {
-                    shots1.children[i].kill();
-                }
-                for (var i = 0; i < shots2.children.length; i++) {
-                    shots2.children[i].kill();
-                }
-
-                initRound();
-            }
-            function initRound() {
-
-                initPlatforms(platforms);
-                lifeBar1.scale.x = 1;
-                lifeBar1.tint = GREEN;
-                lifeBar2.scale.x = 1;
-                lifeBar2.tint = GREEN;
-
-                scoreText1.text = 'Tiros: ' + score1;
-                scoreText2.text = 'Tiros: ' + score2;
-                roundText.text = 'Round ' + round;
-                timeText.text = 'Tiempo: ' + time;
-
-                readyText = game.add.text(game.world.centerX, game.world.centerY, 'Round ' + round, { font: "80px Arial", align: "center" });
-                readyText.anchor.set(0.5);
-
-                player1 = game.add.sprite(32, game.world.height - 112, 'pikachu');
-                player2 = game.add.sprite(game.world.width - 64, game.world.height - 112, 'charmander');
-                initPlayer(player1);
-                initPlayer(player2);
-
-                battle.play('', 0, 1, true);
-            }
-            function finishGame() {
-                state = FINISHED;
-            }
-            function resetGame() {
-                state = INIT;
-            }
         </script>
 
     </body>

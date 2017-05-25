@@ -25,7 +25,7 @@ function launchCloud() {
         var cloud = platforms.create(-180, game.rnd.integerInRange(100, 500), 'cloud');
         cloud.body.immovable = true;
         cloud.scale.setTo(0.4, 0.3);
-        cloud.body.velocity.x = game.rnd.integerInRange(50, 80);
+        cloud.body.velocity.x = game.rnd.integerInRange(40, 80);
         cloud.body.checkCollision.up = true;
         cloud.body.checkCollision.down = false;
         cloud.body.checkCollision.left = false;
@@ -36,16 +36,17 @@ function changeTime() {
     if (fps % 60 == 0) {
         time--;
         timeText.text = 'Tiempo: ' + time;
+        var delGo = ROUND_TIME - 3;
         switch (time) {
             case 0:
                 finishRound();
                 break;
-            case 56:
+            case delGo:
                 readyText.destroy();
                 break;
         }
     } else {
-        if (fps % 120 == 0) {
+        if (fps % 118 == 0) {
             launchCollectable(true);
         }
     }
@@ -162,11 +163,11 @@ function win1() {
     var style = { font: "60px Arial", fill: "#FCD516", align: "center" };
     winText = game.add.text(game.world.centerX, 200, 'Jugador 1 ¡GANA!', style);
     winText.anchor.set(0.5);
-    if (winPlayer1) {
-        finishGame();
-    } else {
+    if (!winPlayer1) {
         winPlayer1 = true;
+        return false;
     }
+    return true;
 }
 function win2() {
     player1.animations.play('die');
@@ -174,9 +175,9 @@ function win2() {
     var style = { font: "60px Arial", fill: "#FCD516", align: "center" };
     winText = game.add.text(game.world.centerX, 200, 'Jugador 2 ¡GANA!', style);
     winText.anchor.set(0.5);
-    if (winPlayer2) {
-        finishGame();
-    } else {
+    if (!winPlayer2) {
         winPlayer2 = true;
+        return false;
     }
+    return true;
 }
