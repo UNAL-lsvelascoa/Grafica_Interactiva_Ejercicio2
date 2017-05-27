@@ -28,6 +28,8 @@ function loadAssets() {
     game.load.image('btnNext', 'assets/buttons/btnNext.png');
     game.load.image('btnCredits', 'assets/buttons/btnCredits.png');
     game.load.image('btnReset', 'assets/buttons/btnReset.png');
+    game.load.image('btnMuteMusic', 'assets/buttons/btnMuteMusic.png');
+    game.load.image('btnMuteSounds', 'assets/buttons/btnMuteSounds.png');
     //game.load.spritesheet('button', 'assets/buttons/button_sprite_sheet.png', 193, 71);
 
     game.load.start();

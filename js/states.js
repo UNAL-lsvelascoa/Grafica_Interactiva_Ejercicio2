@@ -1,8 +1,7 @@
 ﻿function postCreate() {
     state = INIT;
     player1.destroy();
-    intro = game.add.audio('intro');
-    intro.play('', 0, 1, true);
+    playIntro();
     game.add.sprite(0, 0, 'background');
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -20,6 +19,8 @@
     btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', initGame, this, 2, 1, 0);
     btnCredits = game.add.button(game.world.width - 140, game.world.height - 60, 'btnCredits', initGame, this, 2, 1, 0);
     btnCredits.scale.setTo(0.5, 0.5);
+    game.add.button(32, game.world.height - 40, 'btnMuteSounds', muteSounds, this, 2, 1, 0);
+    game.add.button(72, game.world.height - 40, 'btnMuteMusic', muteMusic, this, 2, 1, 0);
 
     /*btnStart.onInputOver.add(over, this);
     btnStart.onInputOut.add(out, this);
@@ -32,7 +33,7 @@ function initGame() {
     fps = 0;
     btnStart.destroy();
     btnCredits.visible = false;
-    intro.pause();
+    stopIntro();
     logo.destroy();
 
     initLifeBar(game.add.graphics(16, 50), WHITE);
@@ -57,18 +58,18 @@ function initGame() {
     readyText = game.add.text(game.world.centerX, game.world.centerY, 'Round ' + round, { font: "80px Arial", align: "center" });
     readyText.anchor.set(0.5);
 
-    battle = game.add.audio('battle');
-    battle.play('', 0, 1, true);
+    playBattle();
 
     state = READY;
 }
 
 
 function pause() {
-    battle.pause();
-    game.add.audio('pause').play('', 0, 1, false);
-    background_pause = game.add.sprite(0, 0, 'background_pause');
+    stopBattle();
+    playSound('pause');
     state = PAUSED;
+
+    background_pause = game.add.sprite(0, 0, 'background_pause');
     dataPause.push(player1.body.velocity.x);
     dataPause.push(player1.body.velocity.y);
     dataPause.push(player2.body.velocity.x);
@@ -105,10 +106,10 @@ function pause() {
 }
 
 function unpause() {
-    game.add.audio('pause').play('', 0, 1, false);
-    battle.resume();
+    playSound('pause');
+    resumeBattle();
+
     background_pause.kill();
-    state = PLAYING;
     player1.body.gravity.y = GRAVITY;
     player1.body.velocity.x = dataPause.shift();
     player1.body.velocity.y = dataPause.shift();
@@ -131,6 +132,7 @@ function unpause() {
         shots2.children[i].body.velocity.x = dataPause.shift();
         shots2.children[i].body.velocity.y = dataPause.shift();
     }
+    state = PLAYING;
 }
 
 function finishRound() {
@@ -138,7 +140,8 @@ function finishRound() {
     state = FINISH_ROUND;
     fps = 0;
 
-    battle.pause();
+    stopBattle();
+
     player1.body.velocity.x = 0;
     player2.body.velocity.x = 0;
 
@@ -179,7 +182,6 @@ function finishRound() {
                         } else {
                             player1.animations.play('die');
                             player2.animations.play('die');
-                            game.add.audio('die').play('', 0, 1, false);
 
                             var style = { font: "80px Arial", fill: "#FCD516", align: "center" };
                             winText = game.add.text(game.world.centerX, 200, 'Empate', style);
@@ -197,13 +199,14 @@ function finishRound() {
         }
     }
 
-    background_pause = game.add.sprite(0, 0, 'background_pause');
-    game.add.audio('die').play('', 0, 1, false);
+    playSound('die');
+
     if (isFinal) {
         finishGame();
     } else {
         btnStart = game.add.button(game.world.centerX - 100, 400, 'btnNext', nextRound, this, 2, 1, 0);
     }
+    background_pause = game.add.sprite(0, 0, 'background_pause');
 }
 function nextRound() {
     round++;
@@ -237,7 +240,7 @@ function initRound() {
     initPlayer(player1);
     initPlayer(player2);
 
-    battle.play('', 0, 1, true);
+    playBattle();
 }
 
 function finishGame() {
@@ -248,6 +251,8 @@ function finishGame() {
 }
 function resetGame() {
     state = INIT;
+    winPlayer1 = false;
+    winPlayer2 = false;
     resetData();
     postCreate();
 }

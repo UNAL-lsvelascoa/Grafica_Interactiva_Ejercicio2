@@ -26,6 +26,9 @@
     <Content Include="assets\buttons\btnCredits.png" />
     <Content Include="assets\buttons\btnReset.png" />
     <Content Include="assets\buttons\btnStart.png" />
+    <Content Include="assets\buttons\btnMuteMusic.png" />
+    <Content Include="assets\buttons\btnMuteSounds.png" />
+    <Content Include="assets\buttons\sounds2.png" />
     <Content Include="assets\characters\charmander.png" />
     <Content Include="assets\characters\pikachu.png" />
     <Content Include="assets\star.png" />
@@ -47,6 +50,7 @@
     <Content Include="assets\sounds\shoot1.mp3" />
     <Content Include="index.html" />
     <Content Include="js\loads.js" />
+    <Content Include="js\soundsManager.js" />
     <Content Include="js\states.js" />
     <Content Include="js\actions.js" />
     <Content Include="js\initElements.js" />
