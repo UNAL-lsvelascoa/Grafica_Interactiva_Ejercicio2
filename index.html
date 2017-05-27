@@ -50,6 +50,7 @@
             var lifeBar2;
             var background_pause;
             var logo;
+            var btnCredits;
 
             //Keys
             var left1;
@@ -124,11 +125,7 @@
                         break;
                     case READY:
                         launchCloud();
-                        game.physics.arcade.collide(collectables, platforms);
-                        game.physics.arcade.collide(player1, platforms);
-                        game.physics.arcade.collide(player2, platforms);
-                        game.physics.arcade.overlap(player1, collectables, collect1, null, this);
-                        game.physics.arcade.overlap(player2, collectables, collect2, null, this);
+                        manageCollides();
                         if (fps == 120) {
                             readyText.text = 'Ready';
                         } else {
@@ -146,16 +143,9 @@
                     case PLAYING:
                         launchCollectable(false);
                         launchCloud();
-
-                        game.physics.arcade.collide(collectables, platforms);
-                        game.physics.arcade.collide(player1, platforms);
-                        game.physics.arcade.collide(player2, platforms);
-                        game.physics.arcade.overlap(player1, collectables, collect1, null, this);
-                        game.physics.arcade.overlap(player2, collectables, collect2, null, this);
-
+                        manageCollides();
                         move(player1, left1, right1, up1, 0);
                         move(player2, left2, right2, up2, 1);
-
                         changeTime();
 
                         if (p.isDown) {
@@ -187,14 +177,10 @@
                         }
                         break;
                     case FINISH_ROUND:
-                        game.physics.arcade.collide(collectables, platforms);
-                        game.physics.arcade.collide(player1, platforms);
-                        game.physics.arcade.collide(player2, platforms);
+                        manageCollides();
                         break;
                     case FINISHED:
-                        game.physics.arcade.collide(collectables, platforms);
-                        game.physics.arcade.collide(player1, platforms);
-                        game.physics.arcade.collide(player2, platforms);
+                        manageCollides();
                         break;
 
                 }

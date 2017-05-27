@@ -18,6 +18,8 @@
 
     logo = game.add.sprite(game.world.centerX - 223, 100, 'logo');
     btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', initGame, this, 2, 1, 0);
+    btnCredits = game.add.button(game.world.width - 140, game.world.height - 60, 'btnCredits', initGame, this, 2, 1, 0);
+    btnCredits.scale.setTo(0.5, 0.5);
 
     /*btnStart.onInputOver.add(over, this);
     btnStart.onInputOut.add(out, this);
@@ -29,6 +31,7 @@
 function initGame() {
     fps = 0;
     btnStart.destroy();
+    btnCredits.visible = false;
     intro.pause();
     logo.destroy();
 
@@ -199,7 +202,7 @@ function finishRound() {
     if (isFinal) {
         finishGame();
     } else {
-        btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', nextRound, this, 2, 1, 0);
+        btnStart = game.add.button(game.world.centerX - 100, 400, 'btnNext', nextRound, this, 2, 1, 0);
     }
 }
 function nextRound() {
@@ -241,7 +244,7 @@ function finishGame() {
     state = FINISHED;
     btnStart.destroy();
     round = 1;
-    btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', resetGame, this, 2, 1, 0);
+    btnStart = game.add.button(game.world.centerX - 100, 400, 'btnReset', resetGame, this, 2, 1, 0);
 }
 function resetGame() {
     state = INIT;

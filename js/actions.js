@@ -51,6 +51,13 @@ function changeTime() {
         }
     }
 }
+function manageCollides() {
+    game.physics.arcade.collide(collectables, platforms);
+    game.physics.arcade.collide(player1, platforms);
+    game.physics.arcade.collide(player2, platforms);
+    game.physics.arcade.overlap(player1, collectables, collect1, null, this);
+    game.physics.arcade.overlap(player2, collectables, collect2, null, this);
+}
 function move(player, left, right, up, indexPlayer) {
     if (player.body.touching.down) {
         player.body.velocity.x = 0;
