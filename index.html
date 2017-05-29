@@ -60,7 +60,6 @@
             var lifeBar2;
             var background_pause;
             var logo;
-            var btnCredits;
 
             //Keys
             var left1;
@@ -109,6 +108,12 @@
             var winPlayer1 = false;
             var winPlayer2 = false;
 
+            //Buttons
+            var btnStart;
+            var btnCredits;
+            var btnMuteMusic;
+            var btnMuteSounds;
+
             var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', { preload: preload, create: create, update: update });
 
             function preload() {
@@ -121,6 +126,7 @@
 
             function create() {
                 loadAssets();
+                initSounds();
             };
 
 

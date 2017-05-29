@@ -41,6 +41,12 @@ function initPlatforms(platforms) {
     ground.body.immovable = true;
 }
 
+function initSounds() {
+    intro = game.add.audio('intro');
+    battle = game.add.audio('battle');
+    credits = game.add.audio('credits');
+}
+
 function resetData() {
     winText.destroy();
     state = READY;

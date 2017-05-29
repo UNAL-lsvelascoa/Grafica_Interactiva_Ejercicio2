@@ -3,74 +3,63 @@ var isMuteSounds = false;
 
 function muteMusic() {
     if (isMuteMusic) {
+        btnMuteMusic.frame = 0;
         switch (state) {
             case INIT:
-                intro.resume();
+                intro.volume = 1;
                 break;
             case PLAYING:
-                if (battle != undefined) {
-                    battle.resume();
-                } else {
-                    battle = game.add.audio('battle');
-                    battle.play('', 0, 1, true);
-                }
+                battle.volume = 1;
+                break;
+            case CREDITS:
+                credits.volume = 1;
                 break;
         }
     } else {
+        btnMuteMusic.frame = 1;
         switch (state) {
             case INIT:
-                intro.pause();
+                intro.volume = 0;
                 break;
             case PLAYING:
-                if (battle != undefined) {
-                    battle.pause();
-                }
+                battle.volume = 0;
+                break;
+            case CREDITS:
+                credits.volume = 0;
                 break;
         }
     }
     isMuteMusic = !isMuteMusic;
 }
 function muteSounds() {
+    if (isMuteSounds) {
+        btnMuteSounds.frame = 0;
+    } else {
+        btnMuteSounds.frame = 1;
+    }
     isMuteSounds = !isMuteSounds;
 }
 
 function playIntro() {
-    if (!isMuteMusic) {
-        intro = game.add.audio('intro');
-        intro.play('', 0, 1, true);
-    }
+    intro.play('', 0, 1, true);
 }
 function stopIntro() {
-    if (!isMuteMusic) {
-        intro.pause();
-    }
+    intro.pause();
 }
 function playBattle() {
-    if (!isMuteMusic) {
-        battle = game.add.audio('battle');
-        battle.play('', 0, 1, true);
-    }
+    battle.play('', 0, 1, true);
 }
 function resumeBattle() {
-    if (!isMuteMusic) {
-        battle.resume();
-    }
+    battle.resume();
 }
 function stopBattle() {
-    if (!isMuteMusic) {
-        battle.pause();
-    }
+    battle.pause();
 }
 function playCredits() {
-    if (!isMuteMusic) {
-        credits = game.add.audio('credits');
-        credits.play('', 0, 1, false);
-    }
+    credits.play('', 0, 1, false);
 }
 function stopCredits() {
-    if (!isMuteMusic) {
-        credits.pause();
-    }
+    credits.pause();
 }
 
 function playSound(sound) {
