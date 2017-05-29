@@ -17,6 +17,7 @@ var background_pause;
 var logo;
 
 //Teclas
+var keys;
 var left1;
 var right1;
 var up1;

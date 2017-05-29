@@ -11,7 +11,6 @@ function postCreate() {
     game.add.sprite(0, 0, 'background');
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    platforms = game.add.group();
     initPlatforms(platforms);
 
     collectables = game.add.group();
@@ -48,6 +47,8 @@ function initGame() {
     lifeBar2 = game.add.graphics(game.world.width - 272, 50);
     initLifeBar(lifeBar1, GREEN);
     initLifeBar(lifeBar2, GREEN);
+
+    showControls();
 
     player1 = game.add.sprite(32, game.world.height - 112, 'pikachu');
     player2 = game.add.sprite(game.world.width - 64, game.world.height - 112, 'charmander');

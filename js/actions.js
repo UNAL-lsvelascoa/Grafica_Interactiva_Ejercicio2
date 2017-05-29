@@ -264,6 +264,9 @@ function changeTime() {
                 break;
             case delGo:
                 readyText.destroy();
+                for (var i = 0; i < keys.children.length; i++) {
+                    keys.children[i].kill();
+                }
                 break;
         }
 

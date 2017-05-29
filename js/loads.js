@@ -35,7 +35,7 @@ function loadAssets() {
     game.load.spritesheet('btnReset', 'assets/buttons/btnReset.png', 200, 80);
     game.load.spritesheet('btnMuteMusic', 'assets/buttons/btnMuteMusic.png', 32, 32);
     game.load.spritesheet('btnMuteSounds', 'assets/buttons/btnMuteSounds.png', 32, 32);
-    //game.load.spritesheet('button', 'assets/buttons/button_sprite_sheet.png', 193, 71);
+    game.load.spritesheet('keys', 'assets/keys.png', 48, 48);
 
     game.load.start();
 }

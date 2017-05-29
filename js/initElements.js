@@ -50,12 +50,15 @@ function initKeys() {
     u = game.input.keyboard.addKey(Phaser.Keyboard.U);
     g = game.input.keyboard.addKey(Phaser.Keyboard.G);
     k = game.input.keyboard.addKey(Phaser.Keyboard.K);
+
+    keys = game.add.group();
 }
 
 /**
  * Esta función inicializa el grupo de plataformas, e inicia con el suelo
  */
 function initPlatforms() {
+    platforms = game.add.group();
     platforms.enableBody = true;
     var ground = platforms.create(0, game.world.height - 32, 'ground');
     ground.scale.setTo(2, 1);
@@ -98,4 +101,20 @@ function resetData() {
     for (var i = 0; i < shots2.children.length; i++) {
         shots2.children[i].kill();
     }
+}
+
+/**
+ * Esta función muestra los controles de juego al iniciar un round
+ */
+function showControls() {
+    keys.create(48, 148, 'keys', 0);
+    keys.create(96, 100, 'keys', 1);
+    keys.create(144, 148, 'keys', 2);
+    keys.create(200, 124, 'keys', 3);
+    keys.create(608, 148, 'keys', 4);
+    keys.create(656, 100, 'keys', 5);
+    keys.create(704, 148, 'keys', 6);
+    keys.create(550, 124, 'keys', 7);
+    keys.create(330, 80, 'keys', 8);
+    keys.create(422, 80, 'keys', 9);
 }
