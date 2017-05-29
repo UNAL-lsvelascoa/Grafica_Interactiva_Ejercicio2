@@ -13,10 +13,16 @@
         <style type="text/css">
             body {
                 margin: 0;
+                background: url(assets/background_page.png) no-repeat center center fixed;
+                background-size: cover;
+                background-repeat: no-repeat;
             }
         </style>
     </head>
     <body>
+
+        <br />
+        <div id="game" style="margin:auto;width:800px;box-shadow:10px 15px 0px 0 rgba(0, 0, 0, 0.4)"></div>
 
         <script type="text/javascript">
 
@@ -100,7 +106,7 @@
             var winPlayer1 = false;
             var winPlayer2 = false;
 
-            var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+            var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', { preload: preload, create: create, update: update });
 
             function preload() {
                 game.load.spritesheet('pikachu', 'assets/characters/pikachu.png', 48, 48);
