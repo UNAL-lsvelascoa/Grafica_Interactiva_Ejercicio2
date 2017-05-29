@@ -26,10 +26,10 @@ function loadAssets() {
     game.load.audio('shoot1', 'assets/sounds/shoot1.mp3');
     game.load.audio('shoot2', 'assets/sounds/shoot2.mp3');
     game.load.audio('pause', 'assets/sounds/pause.mp3');
-    game.load.image('btnStart', 'assets/buttons/btnStart.png');
-    game.load.image('btnNext', 'assets/buttons/btnNext.png');
-    game.load.image('btnCredits', 'assets/buttons/btnCredits.png');
-    game.load.image('btnReset', 'assets/buttons/btnReset.png');
+    game.load.spritesheet('btnStart', 'assets/buttons/btnStart.png', 200, 80);
+    game.load.spritesheet('btnNext', 'assets/buttons/btnNext.png', 200, 80);
+    game.load.spritesheet('btnCredits', 'assets/buttons/btnCredits.png', 200, 80);
+    game.load.spritesheet('btnReset', 'assets/buttons/btnReset.png', 200, 80);
     game.load.image('btnMuteMusic', 'assets/buttons/btnMuteMusic.png');
     game.load.image('btnMuteSounds', 'assets/buttons/btnMuteSounds.png');
     //game.load.spritesheet('button', 'assets/buttons/button_sprite_sheet.png', 193, 71);

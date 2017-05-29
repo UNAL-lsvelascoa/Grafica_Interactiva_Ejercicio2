@@ -19,8 +19,8 @@
     logo.enableBody = true;
     game.physics.arcade.enable(logo);
 
-    btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', initGame, this, 2, 1, 0);
-    btnCredits = game.add.button(game.world.width - 140, game.world.height - 60, 'btnCredits', toCredits, this, 2, 1, 0);
+    btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', initGame, this, 0, 1, 2);
+    btnCredits = game.add.button(game.world.width - 140, game.world.height - 60, 'btnCredits', toCredits, this, 0, 1, 2);
     btnCredits.scale.setTo(0.5, 0.5);
     game.add.button(32, game.world.height - 40, 'btnMuteSounds', muteSounds, this, 2, 1, 0);
     game.add.button(72, game.world.height - 40, 'btnMuteMusic', muteMusic, this, 2, 1, 0);
