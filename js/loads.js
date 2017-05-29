@@ -16,6 +16,7 @@ function loadAssets() {
     game.load.image('collectable', 'assets/powerups/collectable.png');
     game.load.image('shoot1', 'assets/powerups/shoot1.png');
     game.load.image('shoot2', 'assets/powerups/shoot2.png');
+    game.load.image('medal', 'assets/medal.png');
     game.load.spritesheet('charmander', 'assets/characters/charmander.png', 48, 48);
     game.load.audio('battle', 'assets/sounds/battle.mp3');
     game.load.audio('intro', 'assets/sounds/intro.mp3');

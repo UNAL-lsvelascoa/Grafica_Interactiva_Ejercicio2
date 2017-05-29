@@ -242,6 +242,12 @@ function initRound() {
     player2 = game.add.sprite(game.world.width - 64, game.world.height - 112, 'charmander');
     initPlayer(player1);
     initPlayer(player2);
+    if (winPlayer1) {
+        medal1 = game.add.sprite(16, 64, 'medal');
+    }
+    if (winPlayer2) {
+        medal2 = game.add.sprite(game.world.width - 48, 64, 'medal');
+    }
 
     playBattle();
 }

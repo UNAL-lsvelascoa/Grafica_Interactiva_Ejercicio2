@@ -32,6 +32,7 @@
     <Content Include="assets\characters\charmander.png" />
     <Content Include="assets\characters\pikachu.png" />
     <Content Include="assets\logo.png" />
+    <Content Include="assets\medal.png" />
     <Content Include="assets\platform_cloud.png" />
     <Content Include="assets\platform_ground.png" />
     <Content Include="assets\background.png" />
