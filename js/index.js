@@ -1,26 +1,9 @@
-﻿//Constants
-var GRAVITY = 1000;
-var ROUND_TIME = 60;
-var INIT = 0;
-var PLAYING = 1;
-var PAUSED = 2;
-var FINISHED = 3;
-var READY = 4;
-var FINISH_ROUND = 5;
-var LOADING = 6;
-var CREDITS = 7;
-var LIMIT_LAUNCH = 100;
-var GREEN = 0x00FF00;
-var YELLOW = 0xFCD516;
-var RED = 0xFF0000;
-var WHITE = 0xFFFFFF;
-var WITHOUT_DIRECTION = 0;
-var LEFT_DIRECTION = 1;
-var RIGHT_DIRECTION = 2;
-var SHOOT_VELOCITY = 800;
-var CREDITS_VELOCITY = -20;
+﻿/*
+    Este archivo contiene las funciones principales de Phaser como Preload, Create y Update
+    También contiene la mayoría de las variables del juego
+*/
 
-//Elements
+//Elementos
 var platforms;
 var collectables;
 var creditTexts;
@@ -33,7 +16,7 @@ var lifeBar2;
 var background_pause;
 var logo;
 
-//Keys
+//Teclas
 var left1;
 var right1;
 var up1;
@@ -48,7 +31,7 @@ var u;
 var g;
 var k;
 
-//Text
+//Textos
 var score1 = 0;
 var scoreText1;
 var score2 = 0;
@@ -59,7 +42,7 @@ var readyText;
 var roundText;
 var winText;
 
-//For States
+//Variables para los estados
 var dataPause = [];
 var state = LOADING;
 var fps = 0;
@@ -67,7 +50,7 @@ var directions = [WITHOUT_DIRECTION, WITHOUT_DIRECTION];
 var isShooting1 = false;
 var isShooting2 = false;
 
-//Sounds
+//Sonidos
 var intro;
 var battle;
 var hit;
@@ -75,19 +58,22 @@ var die;
 var shoot1;
 var shoot2;
 
-//Rounds logic
+//Para la lógica de los Rounds
 var round = 1;
 var winPlayer1 = false;
 var winPlayer2 = false;
 
-//Buttons
+//Botones
 var btnStart;
 var btnCredits;
 var btnMuteMusic;
 var btnMuteSounds;
 
+//Variable principal para el juego que tendrá un tamaño de 800x600, será cargado en el div "game" y tendrá 3 funciones de estado
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', { preload: preload, create: create, update: update });
 
+
+//Esta función se ejecuta al principio y me permite cargar el personaje principal para hacer la animación de la pantalla de cargando
 function preload() {
     game.load.spritesheet('pikachu', 'assets/characters/pikachu.png', 48, 48);
 
@@ -96,38 +82,31 @@ function preload() {
     game.load.onLoadComplete.add(loadComplete, this);
 };
 
+//Esta función crea los elementos necesarios para iniciar el juego
 function create() {
     loadAssets();
     initSounds();
 };
 
-
+//Esta función actualiza la pantalla del juego en los diferentes estados
 function update() {
     fps++;
 
     switch (state) {
+        //Este caso para la pantalla de carga
         case LOADING:
             break;
+        //Este caso para la pantalla de inicio del juego
         case INIT:
             launchCloud();
             break;
+        //Este caso para la pantalla de espera a que empiece el Round
         case READY:
             launchCloud();
             manageCollides();
-            if (fps == 120) {
-                readyText.text = 'Ready';
-            } else {
-                if (fps == 240) {
-                    readyText.text = 'Set';
-                } else {
-                    if (fps == 360) {
-                        readyText.text = 'Go';
-                        state = PLAYING;
-                        fps = 0;
-                    }
-                }
-            }
+            countdown();
             break;
+        //Este caso para la pantalla de juego principal
         case PLAYING:
             launchCollectable(false);
             launchCloud();
@@ -159,17 +138,21 @@ function update() {
             game.physics.arcade.collide(player1, shots2, hitTo1);
             game.physics.arcade.collide(player2, shots1, hitTo2);
             break;
+        //Este caso para la pantalla de pausa
         case PAUSED:
             if (u.isDown && time > 0) {
                 unpause();
             }
             break;
+        //Este caso para la pantalla de finalización de round
         case FINISH_ROUND:
             manageCollides();
             break;
+        //Este caso para la pantalla de duelo
         case FINISHED:
             manageCollides();
             break;
+        //Este caso para la pantalla de créditos
         case CREDITS:
             creditsLoadingBar();
             launchCreditText();

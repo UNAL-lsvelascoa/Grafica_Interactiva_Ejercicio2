@@ -1,4 +1,14 @@
-﻿function initLifeBar(lifeBar, tint) {
+﻿/*
+    Este archivo contiene funciones que permiten inicializar algunos componentes del juego
+*/
+
+/**
+ * Esta función permite inicializar las barras de vida de los jugadores durante un round
+ * Se le pasa la barra que se quiere inicializar y el color que se le quiere dar
+ * @param {any} lifeBar
+ * @param {any} tint
+ */
+function initLifeBar(lifeBar, tint) {
     lifeBar.lineStyle(5, 0xffffff, 1);
     lifeBar.tint = tint;
     lifeBar.moveTo(0, 0);
@@ -7,6 +17,11 @@
     lifeBar.endFill();
 }
 
+/**
+ * Inicia un jugador para un round
+ * Recibe el jugador a iniciar
+ * @param {any} player
+ */
 function initPlayer(player) {
     game.physics.arcade.enable(player);
     player.body.collideWorldBounds = true;
@@ -18,6 +33,9 @@ function initPlayer(player) {
     player.animations.play('front');
 }
 
+/**
+ * Esta función inicializa las teclas con las que se va a jugar
+ */
 function initKeys() {
     up1 = game.input.keyboard.addKey(Phaser.Keyboard.W);
     down1 = game.input.keyboard.addKey(Phaser.Keyboard.S);
@@ -34,19 +52,28 @@ function initKeys() {
     k = game.input.keyboard.addKey(Phaser.Keyboard.K);
 }
 
-function initPlatforms(platforms) {
+/**
+ * Esta función inicializa el grupo de plataformas, e inicia con el suelo
+ */
+function initPlatforms() {
     platforms.enableBody = true;
     var ground = platforms.create(0, game.world.height - 32, 'ground');
     ground.scale.setTo(2, 1);
     ground.body.immovable = true;
 }
 
+/**
+ * Esta función inicializa las canciones principales del juego
+ */
 function initSounds() {
     intro = game.add.audio('intro');
     battle = game.add.audio('battle');
     credits = game.add.audio('credits');
 }
 
+/**
+ * Esta función reinicia todos los datos para volver a jugar otra vez
+ */
 function resetData() {
     winText.destroy();
     state = READY;

@@ -1,4 +1,10 @@
-﻿function postCreate() {
+﻿/*
+    Este archivo maneja el cambio entre los diferentes estados del juego
+*/
+
+//Esta función se llama luego de cargar todos los componentes del juego, entre la pantalla de carga y la pantalla de menú principal
+//Crea toda la pantalla de menú principal con todos sus componentes
+function postCreate() {
     state = INIT;
     player1.destroy();
     playIntro();
@@ -28,6 +34,7 @@
     initKeys();
 }
 
+//Esta función crea todo el escenario para iniciar un round
 function initGame() {
     fps = 0;
     btnStart.destroy();
@@ -62,7 +69,7 @@ function initGame() {
     state = READY;
 }
 
-
+//Esta función pone un round en modo de Pausa
 function pause() {
     stopBattle();
     playSound('pause');
@@ -104,6 +111,7 @@ function pause() {
     }
 }
 
+//Esta función permite volver al round del menú de pausa
 function unpause() {
     playSound('pause');
     resumeBattle();
@@ -134,6 +142,7 @@ function unpause() {
     state = PLAYING;
 }
 
+//Esta función pasa el juego de estado principal de juego a estado de terminar un round
 function finishRound() {
     background_pause = game.add.sprite(0, 0, 'background_pause');
     var isFinal = false;
@@ -207,12 +216,15 @@ function finishRound() {
         btnStart = game.add.button(game.world.centerX - 100, 400, 'btnNext', nextRound, this, 2, 1, 0);
     }
 }
+
+//Esta función permite pasar al inicio el siguiente round
 function nextRound() {
     round++;
     resetData();
     initRound();
 }
 
+//Esta función nos permite dejar todo el escenario listo para iniciar un round
 function initRound() {
 
     initPlatforms(platforms);
@@ -248,12 +260,15 @@ function initRound() {
     playBattle();
 }
 
+//Esta función termina el juego cuando una batalla termina
 function finishGame() {
     state = FINISHED;
     btnStart.destroy();
     round = 1;
     btnStart = game.add.button(game.world.centerX - 100, 400, 'btnReset', resetGame, this, 2, 1, 0);
 }
+
+//Esta función permite volver a la pantalla del menú principal del juego luego de terminar una batalla
 function resetGame() {
     state = INIT;
     winPlayer1 = false;
@@ -261,6 +276,8 @@ function resetGame() {
     resetData();
     postCreate();
 }
+
+//Esta función es para ir a la pantalla de créditos
 function toCredits() {
     state = CREDITS;
     fps = 0;
@@ -282,6 +299,8 @@ function toCredits() {
     loadBar.scale.x = 0;
     loadBar.endFill();
 }
+
+//Esta función es para cuando terminan los créditos
 function exitOfCredits() {
     state = INIT;
     postCreate();

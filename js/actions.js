@@ -1,13 +1,40 @@
-﻿function collect1(player, collectable) {
+﻿/*
+    Este archivo contiene todas las funciones que se consideran como acciones que se realizan en el juego, tanto por el juego como por el jugador
+*/
+
+//Esta función meneja el texto de conteo de inicio del round y al final pasa al estado de juego principal
+function countdown() {
+    if (fps == 100) {
+        readyText.text = 'Ready';
+    } else {
+        if (fps == 200) {
+            readyText.text = 'Set';
+        } else {
+            if (fps == 300) {
+                readyText.text = 'Go';
+                state = PLAYING;
+                fps = 0;
+            }
+        }
+    }
+}
+
+//Esta función aumenta la cantidad de tiros del jugador 1
+function collect1(player, collectable) {
     collectable.kill();
     score1 += 1;
     scoreText1.text = 'Tiros: ' + score1;
 }
+
+//Esta función aumenta la cantidad de tiros del jugador 2
 function collect2(player, collectable) {
     collectable.kill();
     score2 += 1;
     scoreText2.text = 'Tiros: ' + score2;
 }
+
+//Esta función lanza una manzana desde una posición aleatorea en la parte superior de la pantalla, con una velocidad en x aleatorea y un rebote aleatoreo
+//Si el parámetro launch es verdadero, la manzana se lanza, si no, hay un 1/60 de probabilidad que sea lanzada en una actualización de pantalla
 function launchCollectable(launch) {
     if (game.rnd.integerInRange(1, 60) % 60 == 0 || launch) {
         var collectable = collectables.create(game.rnd.integerInRange(0, 800), 0, 'collectable');
@@ -22,6 +49,8 @@ function launchCollectable(launch) {
         collectable.scale.setTo(0.5, 0.5);
     }
 }
+
+//Esta función lanza una plataforma de nube desde la izquerda con una altura aleatorea y con una velocidad aleatorea cada 1,3 segundos
 function launchCloud() {
     if (fps % 80 == 0) {
         var cloud = platforms.create(-180, game.rnd.integerInRange(100, 500), 'cloud');
@@ -34,6 +63,8 @@ function launchCloud() {
         cloud.body.checkCollision.right = false;
     }
 }
+
+//Esta función se encarga de lanzar todos los textos de los créditos cada cierto tiempo
 function launchCreditText() {
     switch (fps) {
         case 1:
@@ -219,6 +250,9 @@ function launchCreditText() {
             break;
     }
 }
+
+//Esta función se encarga de cambiar el tiempo de un round y terminar el round cuando el tiempo llega a 0
+//Ademas lanza una manzana cada 3 segundo
 function changeTime() {
     if (fps % 60 == 0) {
         time--;
@@ -232,12 +266,14 @@ function changeTime() {
                 readyText.destroy();
                 break;
         }
-    } else {
-        if (fps % 118 == 0) {
+
+        if (fps % 180 == 0) {
             launchCollectable(true);
         }
     }
 }
+
+//Esta función maneja las colisiones entre los diferentes objetos del juego
 function manageCollides() {
     game.physics.arcade.collide(collectables, platforms);
     game.physics.arcade.collide(player1, platforms);
@@ -245,6 +281,8 @@ function manageCollides() {
     game.physics.arcade.overlap(player1, collectables, collect1, null, this);
     game.physics.arcade.overlap(player2, collectables, collect2, null, this);
 }
+
+//Esta función permite mover a los jugadores con las teclas a la derecha, izquierda y dar un salto
 function move(player, left, right, up, indexPlayer) {
     if (player.body.touching.down) {
         player.body.velocity.x = 0;
@@ -276,6 +314,8 @@ function move(player, left, right, up, indexPlayer) {
         player.body.velocity.y = -550;
     }
 }
+
+//Esta función maneja el tiro del jugador 1
 function shoot1() {
     switch (directions[0]) {
         case LEFT_DIRECTION:
@@ -296,6 +336,8 @@ function shoot1() {
             break;
     }
 }
+
+//Esta función maneja el tiro del jugador 2
 function shoot2() {
     switch (directions[1]) {
         case LEFT_DIRECTION:
@@ -317,6 +359,7 @@ function shoot2() {
     }
 }
 
+//Esta función se lanza cuando el jugador 1 es golpeado, le disminuye una cantidad de vida aleatorea, reproduce un sonido de golpe y en caso de que la vida llegue a menor que 0, temrina el juego
 function hitTo1(player, shoot) {
     playSound('hit');
     shoot.kill();
@@ -333,6 +376,8 @@ function hitTo1(player, shoot) {
         finishRound();
     }
 }
+
+//Esta función se lanza cuando el jugador 2 es golpeado, le disminuye una cantidad de vida aleatorea, reproduce un sonido de golpe y en caso de que la vida llegue a menor que 0, temrina el juego
 function hitTo2(player, shoot) {
     playSound('hit');
     shoot.kill();
@@ -350,7 +395,7 @@ function hitTo2(player, shoot) {
     }
 }
 
-
+//Esta función se lanza cuando el jugador 1 gana un round
 function win1() {
     player2.animations.play('die');
     player1.animations.play('front');
@@ -363,6 +408,8 @@ function win1() {
     }
     return true;
 }
+
+//Esta función se lanza cuando el jugador 2 gana un round
 function win2() {
     player1.animations.play('die');
     player2.animations.play('front');
@@ -375,9 +422,10 @@ function win2() {
     }
     return true;
 }
+
+//Esta función mueve los textos de los créditos hacia arriba
 function moveCreditText() {
     for (var i = 0; i < creditTexts.children.length; i++) {
         creditTexts.children[i].y -= 0.35;
     }
-    //}
 }

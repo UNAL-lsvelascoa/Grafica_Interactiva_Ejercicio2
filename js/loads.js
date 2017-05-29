@@ -1,11 +1,14 @@
-﻿var LOAD_LOADING = 1;
-var LOAD_COMPONENTS = 2;
-var LOAD_ANYTHING = 3;
+﻿/*
+    Este archivo es para manejar la carga de archivos a la aplicación
+    También permite visualizar la barra de carga de los créditos
+*/
 
+//Variables de manejo de estados de carga
 var loadBar;
 var loadText;
 var loadType = LOAD_ANYTHING;
 
+//Esta función carga todos los archivos que necesita la aplicación como sonidos e imágenes
 function loadAssets() {
     loadType = LOAD_LOADING;
     game.load.image('logo', 'assets/logo.png');
@@ -37,6 +40,7 @@ function loadAssets() {
     game.load.start();
 }
 
+//Esta función es de Phaser y se llama cuando la carga de archivos va a empezar
 function loadStart() {
     switch (loadType) {
         case LOAD_LOADING:
@@ -58,6 +62,8 @@ function loadStart() {
     }
 }
 
+//Esta función es de Phaser y se llama cuando un archivo se a descargado completamente y está listo para usarse
+//Yo la uso para mover la barra de carga del inicio de la aplicación
 function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
     switch (loadType) {
         case LOAD_COMPONENTS:
@@ -67,6 +73,7 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
     }
 }
 
+//Esta función es de Phaser y se llama al terminar toda la descarga de los archivos necesarios
 function loadComplete() {
     switch (loadType) {
         case LOAD_LOADING:
@@ -78,6 +85,7 @@ function loadComplete() {
     }
 }
 
+//Esta función actualiza la barra de carga de los créditos
 function creditsLoadingBar() {
     if (fps % 5 == 0) {
         loadBar.scale.x += 0.0004025;
