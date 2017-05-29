@@ -13,12 +13,13 @@ function loadAssets() {
     game.load.image('background_pause', 'assets/background_pause.png');
     game.load.image('ground', 'assets/platform_ground.png');
     game.load.image('cloud', 'assets/platform_cloud.png');
-    game.load.image('collectable', 'assets/collectable.png');
-    game.load.image('shoot1', 'assets/shoot1.png');
-    game.load.image('shoot2', 'assets/shoot2.png');
+    game.load.image('collectable', 'assets/powerups/collectable.png');
+    game.load.image('shoot1', 'assets/powerups/shoot1.png');
+    game.load.image('shoot2', 'assets/powerups/shoot2.png');
     game.load.spritesheet('charmander', 'assets/characters/charmander.png', 48, 48);
     game.load.audio('battle', 'assets/sounds/battle.mp3');
     game.load.audio('intro', 'assets/sounds/intro.mp3');
+    game.load.audio('credits', 'assets/sounds/credits.mp3');
     game.load.audio('hit', 'assets/sounds/hit.mp3');
     game.load.audio('die', 'assets/sounds/die.mp3');
     game.load.audio('shoot1', 'assets/sounds/shoot1.mp3');
@@ -73,5 +74,11 @@ function loadComplete() {
         case LOAD_COMPONENTS:
             postCreate();
             break;
+    }
+}
+
+function creditsLoadingBar() {
+    if (fps % 5 == 0) {
+        loadBar.scale.x += 0.0004025;
     }
 }

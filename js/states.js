@@ -16,8 +16,11 @@
     shots2.enableBody = true;
 
     logo = game.add.sprite(game.world.centerX - 223, 100, 'logo');
+    logo.enableBody = true;
+    game.physics.arcade.enable(logo);
+
     btnStart = game.add.button(game.world.centerX - 100, 400, 'btnStart', initGame, this, 2, 1, 0);
-    btnCredits = game.add.button(game.world.width - 140, game.world.height - 60, 'btnCredits', initGame, this, 2, 1, 0);
+    btnCredits = game.add.button(game.world.width - 140, game.world.height - 60, 'btnCredits', toCredits, this, 2, 1, 0);
     btnCredits.scale.setTo(0.5, 0.5);
     game.add.button(32, game.world.height - 40, 'btnMuteSounds', muteSounds, this, 2, 1, 0);
     game.add.button(72, game.world.height - 40, 'btnMuteMusic', muteMusic, this, 2, 1, 0);
@@ -136,6 +139,7 @@ function unpause() {
 }
 
 function finishRound() {
+    background_pause = game.add.sprite(0, 0, 'background_pause');
     var isFinal = false;
     state = FINISH_ROUND;
     fps = 0;
@@ -206,7 +210,6 @@ function finishRound() {
     } else {
         btnStart = game.add.button(game.world.centerX - 100, 400, 'btnNext', nextRound, this, 2, 1, 0);
     }
-    background_pause = game.add.sprite(0, 0, 'background_pause');
 }
 function nextRound() {
     round++;
@@ -254,5 +257,30 @@ function resetGame() {
     winPlayer1 = false;
     winPlayer2 = false;
     resetData();
+    postCreate();
+}
+function toCredits() {
+    state = CREDITS;
+    fps = 0;
+    btnCredits.visible = false;
+    btnStart.visible = false;
+
+    logo.body.velocity.y = CREDITS_VELOCITY;
+
+    creditTexts = game.add.group();
+
+    stopIntro();
+    playCredits();
+
+    loadBar = game.add.graphics(0, game.world.height - 4);
+
+    loadBar.lineStyle(5, YELLOW, 1);
+    loadBar.moveTo(0, 0);
+    loadBar.lineTo(game.world.width, 0);
+    loadBar.scale.x = 0;
+    loadBar.endFill();
+}
+function exitOfCredits() {
+    state = INIT;
     postCreate();
 }

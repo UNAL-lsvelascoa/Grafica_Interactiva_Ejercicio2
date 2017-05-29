@@ -61,6 +61,18 @@ function stopBattle() {
         battle.pause();
     }
 }
+function playCredits() {
+    if (!isMuteMusic) {
+        credits = game.add.audio('credits');
+        credits.play('', 0, 1, false);
+    }
+}
+function stopCredits() {
+    if (!isMuteMusic) {
+        credits.pause();
+    }
+}
+
 function playSound(sound) {
     if (!isMuteSounds) {
         game.add.audio(sound).play('', 0, 1, false);

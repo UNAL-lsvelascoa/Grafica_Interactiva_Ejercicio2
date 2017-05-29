@@ -28,7 +28,7 @@
 
             //Constants
             var GRAVITY = 1000;
-            var ROUND_TIME = 10;
+            var ROUND_TIME = 60;
             var INIT = 0;
             var PLAYING = 1;
             var PAUSED = 2;
@@ -36,6 +36,7 @@
             var READY = 4;
             var FINISH_ROUND = 5;
             var LOADING = 6;
+            var CREDITS = 7;
             var LIMIT_LAUNCH = 100;
             var GREEN = 0x00FF00;
             var YELLOW = 0xFCD516;
@@ -45,10 +46,12 @@
             var LEFT_DIRECTION = 1;
             var RIGHT_DIRECTION = 2;
             var SHOOT_VELOCITY = 800;
+            var CREDITS_VELOCITY = -20;
 
             //Elements
             var platforms;
             var collectables;
+            var creditTexts;
             var shots1;
             var shots2;
             var player1;
@@ -188,6 +191,18 @@
                         break;
                     case FINISHED:
                         manageCollides();
+                        break;
+                    case CREDITS:
+                        creditsLoadingBar();
+                        launchCreditText();
+                        moveCreditText();
+                        if (fps == 12200) {
+                            logo.body.velocity.y = 0;
+                        } else {
+                            if (fps == 12500) {
+                                exitOfCredits();
+                            }
+                        }
                         break;
 
                 }
