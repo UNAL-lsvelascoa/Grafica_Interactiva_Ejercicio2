@@ -139,79 +139,73 @@ function launchCreditText() {
             game.add.text(game.world.centerX, game.world.height + 20, "Tiro (Coleccionable)", { font: "22px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
         case 6000:
-            game.add.text(game.world.centerX, game.world.height + 20, "", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
+            game.add.text(game.world.centerX, game.world.height + 20, "http://piq.codeus.net/static/media/userpics/piq_54438_400x400.png", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
         case 6200:
-            game.add.text(game.world.centerX, game.world.height + 20, "Marca de round ganado:", { font: "22px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
+            game.add.text(game.world.centerX, game.world.height + 20, "Medalla:", { font: "22px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
         case 6300:
-            game.add.text(game.world.centerX, game.world.height + 20, "", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
+            game.add.text(game.world.centerX, game.world.height + 20, "http://www.freepngimg.com/download/medal/7-2-medal-png-clipart.png", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
         case 6500:
             game.add.text(game.world.centerX, game.world.height + 20, "Sonido (Activo e inactivo):", { font: "22px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
         case 6600:
-            game.add.text(game.world.centerX, game.world.height + 20, "", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
+            game.add.text(game.world.centerX, game.world.height + 20, "http://www.iconfinder.com", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
         case 6800:
             game.add.text(game.world.centerX, game.world.height + 20, "Música (Activo e Inactivo):", { font: "22px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
         case 6900:
-            game.add.text(game.world.centerX, game.world.height + 20, "", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
+            game.add.text(game.world.centerX, game.world.height + 20, "http://www.iconfinder.com y Erick Steven Velasco Amaya", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
         case 7100:
-            game.add.text(game.world.centerX, game.world.height + 20, "Medallas:", { font: "22px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
-            break;
-        case 7200:
-            game.add.text(game.world.centerX, game.world.height + 20, "http://www.freepngimg.com/download/medal/7-2-medal-png-clipart.png", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
-            break;
-        case 7400:
             game.add.text(game.world.centerX, game.world.height + 20, "Nube:", { font: "22px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
-        case 7500:
+        case 7200:
             game.add.text(game.world.centerX, game.world.height + 20, "https://phaser.io/content/tutorials/coding-tips-004/cloud-platform.png", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
-        case 7700:
+        case 7400:
             game.add.text(game.world.centerX, game.world.height + 20, "Suelo:", { font: "22px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
-        case 7800:
+        case 7500:
             game.add.text(game.world.centerX, game.world.height + 20, "Erick Stevens Velasco Amaya con Adobe Photoshop CS6", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
-        case 8000:
+        case 7700:
             game.add.text(game.world.centerX, game.world.height + 20, "Botón START:", { font: "22px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
-        case 8100:
+        case 7800:
             game.add.text(game.world.centerX, game.world.height + 20, "http://pixelartmaker.com/art/0a8a31a07ea245d.png", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
-        case 8300:
+        case 8000:
             game.add.text(game.world.centerX, game.world.height + 20, "Botón NEXT:", { font: "22px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
-        case 8400:
-            game.add.text(game.world.centerX, game.world.height + 20, "http://piq.codeus.net/static/media/userpics/piq_364175_400x400.png", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
+        case 8100:
+            game.add.text(game.world.centerX, game.world.height + 20, "Erick Steven Velasco Amaya con: http://makepixelart.com/free/", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
-        case 8600:
+        case 8300:
             game.add.text(game.world.centerX, game.world.height + 20, "Botón RESET:", { font: "22px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
-        case 8700:
+        case 8400:
             game.add.text(game.world.centerX, game.world.height + 20, "http://piq.codeus.net/static/media/userpics/piq_106361_400x400.png", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
-        case 8900:
+        case 8600:
             game.add.text(game.world.centerX, game.world.height + 20, "Botón CRÉDITOS:", { font: "22px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
-        case 9000:
+        case 8700:
             game.add.text(game.world.centerX, game.world.height + 20, "Erick Stevens Velasco Amaya con: http://makepixelart.com/free/", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
-        case 9200:
+        case 8900:
             game.add.text(game.world.centerX, game.world.height + 20, "Logo - PikaWAR The last battle", { font: "22px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
-        case 9300:
+        case 9000:
             game.add.text(game.world.centerX, game.world.height + 20, "Erick Stevens Velasco Amaya con: https://textcraft.net/", { font: "18px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
 
-        case 9700:
+        case 9600:
             game.add.text(game.world.centerX, game.world.height + 20, "Para la clase de GRÁFICA INTERACTIVA", { font: "32px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
-        case 9800:
+        case 9700:
             game.add.text(game.world.centerX, game.world.height + 20, "Universidad Nacional de Colombia - Sede Bogotá", { font: "28px Arial", align: "center", fill: '#000000' }, creditTexts).anchor.set(0.5);
             break;
         case 10100:

@@ -31,6 +31,7 @@
     <Content Include="assets\buttons\sounds2.png" />
     <Content Include="assets\characters\charmander.png" />
     <Content Include="assets\characters\pikachu.png" />
+    <Content Include="assets\game_logic_flow.png" />
     <Content Include="assets\logo.png" />
     <Content Include="assets\medal.png" />
     <Content Include="assets\platform_cloud.png" />
@@ -50,6 +51,7 @@
     <Content Include="assets\sounds\shoot2.mp3" />
     <Content Include="assets\sounds\shoot1.mp3" />
     <Content Include="index.html" />
+    <Content Include="js\index.js" />
     <Content Include="js\loads.js" />
     <Content Include="js\soundsManager.js" />
     <Content Include="js\states.js" />
